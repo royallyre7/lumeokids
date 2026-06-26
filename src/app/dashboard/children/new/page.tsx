@@ -108,52 +108,83 @@ export default function NewChildPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {step === 1 && (
-            <div className="animate-fade-in space-y-5">
-              <Input
-                label="Child's Name *"
-                id="name"
-                name="name"
-                type="text"
-                required
-                placeholder="Your child's full name"
-                error={errors.name?.[0]}
-              />
+        <form onSubmit={handleSubmit}>
+          {/* STEP 1: Basics — always in DOM, hidden when on step 2 */}
+          <div className={step === 1 ? "space-y-5 animate-fade-in" : "hidden"}>
+            <Input
+              label="Child's Name *"
+              id="name"
+              name="name"
+              type="text"
+              required
+              placeholder="Your child's full name"
+              error={errors.name?.[0]}
+            />
 
-              <Input
-                label="Date of Birth *"
-                id="dateOfBirth"
-                name="dateOfBirth"
-                type="date"
-                required
-                error={errors.dateOfBirth?.[0]}
-              />
+            <Input
+              label="Date of Birth *"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              type="date"
+              required
+              error={errors.dateOfBirth?.[0]}
+            />
 
-              <div>
-                <label
-                  htmlFor="learningLevel"
-                  className="input-label"
-                >
-                  Learning Level
-                </label>
-                <select
-                  id="learningLevel"
-                  name="learningLevel"
-                  defaultValue="BEGINNER"
-                  className="input-field appearance-none bg-no-repeat bg-[right_1rem_center]"
-                  style={{
-                    backgroundImage:
-                      "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\")",
-                    backgroundSize: "1.25rem",
-                  }}
-                >
-                  <option value="BEGINNER">🌱 Beginner</option>
-                  <option value="INTERMEDIATE">🌿 Intermediate</option>
-                  <option value="ADVANCED">🌳 Advanced</option>
-                </select>
-              </div>
+            <div>
+              <label htmlFor="learningLevel" className="input-label">
+                Learning Level
+              </label>
+              <select
+                id="learningLevel"
+                name="learningLevel"
+                defaultValue="BEGINNER"
+                className="input-field appearance-none bg-no-repeat bg-[right_1rem_center]"
+                style={{
+                  backgroundImage:
+                    "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\")",
+                  backgroundSize: "1.25rem",
+                }}
+              >
+                <option value="BEGINNER">🌱 Beginner</option>
+                <option value="INTERMEDIATE">🌿 Intermediate</option>
+                <option value="ADVANCED">🌳 Advanced</option>
+              </select>
+            </div>
+          </div>
 
+          {/* STEP 2: Details — always in DOM, hidden when on step 1 */}
+          <div className={step === 2 ? "space-y-5 animate-fade-in" : "hidden"}>
+            <Input
+              label="Interests"
+              id="interests"
+              name="interests"
+              type="text"
+              placeholder="e.g., drawing, puzzles, animals"
+              error={errors.interests?.[0]}
+            />
+
+            <Input
+              label="Strengths"
+              id="strengths"
+              name="strengths"
+              type="text"
+              placeholder="e.g., good memory, curious, creative"
+              error={errors.strengths?.[0]}
+            />
+
+            <Input
+              label="Weaknesses"
+              id="weaknesses"
+              name="weaknesses"
+              type="text"
+              placeholder="e.g., short attention span, shy"
+              error={errors.weaknesses?.[0]}
+            />
+          </div>
+
+          {/* Navigation buttons */}
+          <div className="mt-5">
+            {step === 1 ? (
               <Button
                 type="button"
                 variant="primary"
@@ -162,38 +193,7 @@ export default function NewChildPage() {
               >
                 Continue to Details →
               </Button>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="animate-fade-in space-y-5">
-              <Input
-                label="Interests"
-                id="interests"
-                name="interests"
-                type="text"
-                placeholder="e.g., drawing, puzzles, animals"
-                error={errors.interests?.[0]}
-              />
-
-              <Input
-                label="Strengths"
-                id="strengths"
-                name="strengths"
-                type="text"
-                placeholder="e.g., good memory, curious, creative"
-                error={errors.strengths?.[0]}
-              />
-
-              <Input
-                label="Weaknesses"
-                id="weaknesses"
-                name="weaknesses"
-                type="text"
-                placeholder="e.g., short attention span, shy"
-                error={errors.weaknesses?.[0]}
-              />
-
+            ) : (
               <div className="flex gap-3">
                 <Button
                   type="button"
@@ -203,16 +203,12 @@ export default function NewChildPage() {
                 >
                   ← Back
                 </Button>
-                <Button
-                  type="submit"
-                  loading={loading}
-                  className="flex-1"
-                >
+                <Button type="submit" loading={loading} className="flex-1">
                   Create Profile 🎉
                 </Button>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </form>
       </Card>
     </div>

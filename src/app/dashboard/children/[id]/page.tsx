@@ -1,27 +1,10 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { calculateAge, getInitial } from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Badge, { getBadgeVariant } from "@/components/ui/Badge";
-
-function calculateAge(dateOfBirth: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - dateOfBirth.getTime();
-  const years = Math.floor(diffMs / (365.25 * 24 * 60 * 60 * 1000));
-  const months = Math.floor(
-    (diffMs % (365.25 * 24 * 60 * 60 * 1000)) /
-      (30.44 * 24 * 60 * 60 * 1000)
-  );
-  if (years > 0) {
-    return `${years} year${years > 1 ? "s" : ""} ${months} month${months > 1 ? "s" : ""}`;
-  }
-  return `${months} month${months > 1 ? "s" : ""}`;
-}
-
-function getInitial(name: string): string {
-  return name.charAt(0).toUpperCase();
-}
 
 const levelNames: Record<string, string> = {
   BEGINNER: "Beginner",

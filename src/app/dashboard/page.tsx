@@ -1,42 +1,17 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import Link from "next/link";
+import { calculateAge, getInitial, getTimeOfDay } from "@/lib/utils";
 import Card from "@/components/ui/Card";
 import Badge, { getBadgeVariant } from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
-
-function calculateAge(dateOfBirth: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - dateOfBirth.getTime();
-  const years = Math.floor(diffMs / (365.25 * 24 * 60 * 60 * 1000));
-  const months = Math.floor(
-    (diffMs % (365.25 * 24 * 60 * 60 * 1000)) /
-      (30.44 * 24 * 60 * 60 * 1000)
-  );
-  if (years > 0) {
-    return `${years}y ${months}m`;
-  }
-  return `${months}m`;
-}
-
-function getInitial(name: string): string {
-  return name.charAt(0).toUpperCase();
-}
 
 const levelNames: Record<string, string> = {
   BEGINNER: "Beginner",
   INTERMEDIATE: "Intermediate",
   ADVANCED: "Advanced",
 };
-
-function getTimeOfDay(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-}
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
