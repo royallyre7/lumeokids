@@ -3,6 +3,40 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Badge, { getBadgeVariant } from "@/components/ui/Badge";
+
+function calculateAge(dateOfBirth: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - dateOfBirth.getTime();
+  const years = Math.floor(diffMs / (365.25 * 24 * 60 * 60 * 1000));
+  const months = Math.floor(
+    (diffMs % (365.25 * 24 * 60 * 60 * 1000)) /
+      (30.44 * 24 * 60 * 60 * 1000)
+  );
+  if (years > 0) {
+    return `${years} year${years > 1 ? "s" : ""} ${months} month${months > 1 ? "s" : ""}`;
+  }
+  return `${months} month${months > 1 ? "s" : ""}`;
+}
+
+function getInitial(name: string): string {
+  return name.charAt(0).toUpperCase();
+}
+
+const levelNames: Record<string, string> = {
+  BEGINNER: "Beginner",
+  INTERMEDIATE: "Intermediate",
+  ADVANCED: "Advanced",
+};
+
+const iconMap: Record<string, string> = {
+  Age: "🎂",
+  "Date of Birth": "📅",
+  "Learning Level": "📈",
+  Interests: "🎨",
+  Strengths: "💪",
+  Weaknesses: "🎯",
+};
 
 export default async function ChildDetailPage({
   params,
@@ -20,77 +54,91 @@ export default async function ChildDetailPage({
     notFound();
   }
 
-  function calculateAge(dateOfBirth: Date): string {
-    const now = new Date();
-    const diffMs = now.getTime() - dateOfBirth.getTime();
-    const years = Math.floor(diffMs / (365.25 * 24 * 60 * 60 * 1000));
-    const months = Math.floor(
-      (diffMs % (365.25 * 24 * 60 * 60 * 1000)) /
-        (30.44 * 24 * 60 * 60 * 1000)
-    );
-    if (years > 0) {
-      return `${years} year${years > 1 ? "s" : ""} ${months} month${months > 1 ? "s" : ""}`;
-    }
-    return `${months} month${months > 1 ? "s" : ""}`;
-  }
-
-  const levelLabel: Record<string, string> = {
-    BEGINNER: "Beginner",
-    INTERMEDIATE: "Intermediate",
-    ADVANCED: "Advanced",
-  };
-
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto animate-fade-in">
       <Link
         href="/dashboard"
-        className="text-sm text-gray-500 hover:text-gray-700 mb-6 inline-block"
+        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors mb-6"
       >
         ← Back to Dashboard
       </Link>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
-          {child.name}
-        </h1>
+      {/* Profile Header */}
+      <div className="bg-white rounded-3xl border border-stone-100 shadow-card overflow-hidden">
+        {/* Color bar + avatar */}
+        <div className="bg-gradient-to-r from-coral-400 to-coral-500 h-24 relative">
+          <div className="absolute -bottom-8 left-8">
+            <div className="w-20 h-20 rounded-3xl bg-white shadow-lg flex items-center justify-center">
+              <span className="text-3xl font-extrabold text-coral-500">
+                {getInitial(child.name)}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <InfoItem label="Age" value={calculateAge(child.dateOfBirth)} />
-          <InfoItem
-            label="Date of Birth"
-            value={child.dateOfBirth.toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          />
-          <InfoItem
-            label="Learning Level"
-            value={levelLabel[child.learningLevel] || child.learningLevel}
-          />
-          <InfoItem
-            label="Interests"
-            value={child.interests || "Not specified"}
-          />
-          <InfoItem
-            label="Strengths"
-            value={child.strengths || "Not specified"}
-          />
-          <InfoItem
-            label="Weaknesses"
-            value={child.weaknesses || "Not specified"}
-          />
-        </dl>
+        {/* Name + Badge */}
+        <div className="pt-12 pb-8 px-8">
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-2xl font-extrabold text-stone-800">
+              {child.name}
+            </h1>
+            <Badge
+              label={levelNames[child.learningLevel] || child.learningLevel}
+              variant={getBadgeVariant(child.learningLevel)}
+            />
+          </div>
+          <p className="text-stone-500 text-sm mt-1">
+            {calculateAge(child.dateOfBirth)} old
+          </p>
+        </div>
+      </div>
+
+      {/* Info Grid */}
+      <div className="grid gap-4 mt-6 sm:grid-cols-2">
+        <InfoCard
+          label="Age"
+          value={calculateAge(child.dateOfBirth)}
+        />
+        <InfoCard
+          label="Date of Birth"
+          value={child.dateOfBirth.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        />
+        <InfoCard
+          label="Learning Level"
+          value={levelNames[child.learningLevel] || child.learningLevel}
+        />
+        <InfoCard
+          label="Interests"
+          value={child.interests || "Not specified"}
+        />
+        <InfoCard
+          label="Strengths"
+          value={child.strengths || "Not specified"}
+        />
+        <InfoCard
+          label="Weaknesses"
+          value={child.weaknesses || "Not specified"}
+        />
       </div>
     </div>
   );
 }
 
-function InfoItem({ label, value }: { label: string; value: string }) {
+function InfoCard({ label, value }: { label: string; value: string }) {
+  const icon = iconMap[label] || "📋";
   return (
-    <div>
-      <dt className="text-sm font-medium text-gray-500">{label}</dt>
-      <dd className="mt-1 text-gray-900">{value}</dd>
+    <div className="bg-white rounded-2xl border border-stone-100 shadow-card p-5 flex items-start gap-4">
+      <div className="text-2xl flex-shrink-0">{icon}</div>
+      <div className="min-w-0">
+        <dt className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-1">
+          {label}
+        </dt>
+        <dd className="text-stone-800 font-semibold break-words">{value}</dd>
+      </div>
     </div>
   );
 }

@@ -9,22 +9,26 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
+  const name = session?.user?.name || "Parent";
+  const initial = name.charAt(0).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-stone-50">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-stone-100 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+          {/* Brand */}
           <Link
             href="/dashboard"
-            className="text-xl font-bold text-primary-600 tracking-tight"
+            className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-coral-500 to-coral-700 tracking-tight"
           >
             🧒 LumeoKids
           </Link>
 
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">
-              {session?.user?.name}
+          {/* User */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-stone-500 hidden sm:block font-medium">
+              {name}
             </span>
             <LogoutButton />
           </div>
@@ -32,7 +36,7 @@ export default async function DashboardLayout({
       </header>
 
       {/* Content */}
-      <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
+      <main className="page-container">{children}</main>
     </div>
   );
 }
