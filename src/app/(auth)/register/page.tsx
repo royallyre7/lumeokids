@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -56,74 +58,77 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+    <div className="animate-slide-up">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
-        <p className="text-gray-600 mt-2">Join LumeoKids for your child&apos;s growth</p>
+        <h1 className="text-2xl font-extrabold text-stone-800">
+          Create Account 🎉
+        </h1>
+        <p className="text-stone-500 mt-2">
+          Join LumeoKids and start your child&apos;s learning journey
+        </p>
       </div>
 
       {formError && (
-        <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-          {formError}
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm flex items-center gap-2">
+          <span>⚠️</span> {formError}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <Field label="Full Name" name="name" type="text" errors={errors.name} />
-        <Field label="Email" name="email" type="email" errors={errors.email} />
-        <Field label="Password" name="password" type="password" errors={errors.password} />
-        <Field
-          label="Confirm Password"
-          name="confirmPassword"
-          type="password"
-          errors={errors.confirmPassword}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Full Name"
+          id="name"
+          name="name"
+          type="text"
+          required
+          placeholder="Your full name"
+          error={errors.name?.[0]}
         />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-primary-600 px-4 py-3 text-white font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50"
-        >
+        <Input
+          label="Email"
+          id="email"
+          name="email"
+          type="email"
+          required
+          placeholder="you@example.com"
+          error={errors.email?.[0]}
+        />
+
+        <Input
+          label="Password"
+          id="password"
+          name="password"
+          type="password"
+          required
+          placeholder="At least 6 characters"
+          error={errors.password?.[0]}
+        />
+
+        <Input
+          label="Confirm Password"
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          required
+          placeholder="Re-enter your password"
+          error={errors.confirmPassword?.[0]}
+        />
+
+        <Button type="submit" loading={loading} className="w-full">
           {loading ? "Creating Account..." : "Create Account"}
-        </button>
+        </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-600">
+      <p className="mt-6 text-center text-sm text-stone-500">
         Already have an account?{" "}
-        <Link href="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+        <Link
+          href="/login"
+          className="text-coral-500 hover:text-coral-600 font-semibold transition-colors"
+        >
           Sign in
         </Link>
       </p>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type,
-  errors,
-}: {
-  label: string;
-  name: string;
-  type: string;
-  errors?: string[];
-}) {
-  return (
-    <div>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required
-        className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-colors"
-      />
-      {errors && errors.length > 0 && (
-        <p className="mt-1 text-sm text-red-600">{errors[0]}</p>
-      )}
     </div>
   );
 }

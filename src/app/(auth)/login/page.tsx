@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,57 +38,61 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+    <div className="animate-slide-up">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
-        <p className="text-gray-600 mt-2">Sign in to your LumeoKids account</p>
+        <h1 className="text-2xl font-extrabold text-stone-800">
+          Welcome Back 👋
+        </h1>
+        <p className="text-stone-500 mt-2">
+          Sign in to your LumeoKids account
+        </p>
       </div>
 
       {error && (
-        <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-          {error}
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm flex items-center gap-2">
+          <span>⚠️</span> {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-colors"
-          />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Email"
+          id="email"
+          name="email"
+          type="email"
+          required
+          placeholder="you@example.com"
+        />
+
+        <Input
+          label="Password"
+          id="password"
+          name="password"
+          type="password"
+          required
+          placeholder="Enter your password"
+        />
+
+        <div className="flex items-center justify-end">
+          <Link
+            href="#"
+            className="text-sm text-stone-400 hover:text-coral-500 transition-colors"
+          >
+            Forgot password?
+          </Link>
         </div>
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-colors"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-primary-600 px-4 py-3 text-white font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50"
-        >
-          {loading ? "Signing In..." : "Sign In"}
-        </button>
+        <Button type="submit" loading={loading} className="w-full">
+          {loading ? "Signing in..." : "Sign In"}
+        </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-600">
+      <p className="mt-6 text-center text-sm text-stone-500">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-primary-600 hover:text-primary-700 font-medium">
+        <Link
+          href="/register"
+          className="text-coral-500 hover:text-coral-600 font-semibold transition-colors"
+        >
           Create one
         </Link>
       </p>
