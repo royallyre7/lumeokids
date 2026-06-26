@@ -4,6 +4,79 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-stone-50 text-stone-800 antialiased;
+  }
+
+  /* Smooth focus rings */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-coral-400;
+  }
+}
+
+@layer components {
+  /* === Input base — shared across all form fields === */
+  .input-field {
+    @apply w-full rounded-2xl border border-stone-200 bg-white px-4 py-3
+           text-stone-800 placeholder:text-stone-400
+           transition-all duration-200
+           focus:border-coral-400 focus:ring-4 focus:ring-coral-100
+           hover:border-stone-300;
+  }
+
+  .input-label {
+    @apply block text-sm font-semibold text-stone-600 mb-1.5;
+  }
+
+  .input-error {
+    @apply text-sm text-red-500 mt-1.5 flex items-center gap-1;
+  }
+
+  /* === Card === */
+  .card {
+    @apply bg-white rounded-3xl border border-stone-100
+           shadow-card transition-all duration-300;
+  }
+
+  .card-hoverable {
+    @apply card hover:shadow-card-hover hover:-translate-y-0.5
+           active:shadow-card-active active:translate-y-0;
+  }
+
+  /* === Page shell === */
+  .page-container {
+    @apply max-w-5xl mx-auto px-4 py-8 animate-fade-in;
+  }
+
+  /* === Section heading === */
+  .section-title {
+    @apply text-2xl font-extrabold text-stone-800 tracking-tight;
+  }
+
+  .section-subtitle {
+    @apply text-stone-500 mt-1;
+  }
+}
+
+@layer utilities {
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-coral-500 to-coral-700;
+  }
+
+  /* Background pattern — subtle dots */
+  .bg-dots {
+    background-image: radial-gradient(circle, #e7e5e4 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Hero gradient */
+  .bg-hero {
+    background: linear-gradient(
+      135deg,
+      #fff5f0 0%,
+      #f0f9ff 40%,
+      #fef3c7 70%,
+      #f0fdf4 100%
+    );
   }
 }

@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Nunito } from "next/font/google";
 import "./globals.css";
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "LumeoKids — AI-Powered Learning for Children",
@@ -14,7 +21,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">{children}</body>
+      <body className={`${nunito.className} min-h-screen flex flex-col`}>
+        {children}
+      </body>
     </html>
   );
 }
