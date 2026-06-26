@@ -14,7 +14,7 @@
 | Frontend | Next.js 14 (App Router) |
 | Styling | Tailwind CSS |
 | Backend | Next.js API Routes |
-| Database | PostgreSQL |
+| Database | SQLite (development) / PostgreSQL (production) |
 | ORM | Prisma |
 | Auth | NextAuth.js |
 | Validation | Zod |
@@ -25,16 +25,22 @@
 ## Current Session State
 <!-- Update this section at the end of each session -->
 
-### Status: `NOT STARTED`
-- **Last worked on**: —
+### Status: `IN PROGRESS`
+- **Last worked on**: 2026-06-27 — Child Profile System MVP
 - **Branch**: `main`
-- **Last commit**: Initial commit (README.md, royallyre7.md)
+- **Last commit**: 159d489 — docs: add report.md and 6x20 Marp slides
 
 ### Current Job
-> _None — project is freshly initialized._
+> _Child Profile System MVP — complete._
+> - Project scaffolded (Next.js 14, Tailwind, Prisma/SQLite)
+> - Auth system (register/login with NextAuth credentials)
+> - Child profile CRUD (create + list + view)
+> - Parent dashboard with child listing
+> - `.mcp.json`, skill (`db-migrate`), agent (`api-tester`)
+> - `report.md` + 6x20 Marp slides
 
 ### Next Step
-> _Start with: Child Profile System or Authentication (Parent login/register)_
+> _Complete remaining CRUD (edit/delete child profiles), then Milestone Tracking._
 
 ---
 
@@ -42,12 +48,12 @@
 Track progress here. Check off when complete.
 
 - [x] Project initialization
-- [ ] Child Profile System
-- [ ] Authentication (Parent login/register)
+- [x] Child Profile System
+- [x] Authentication (Parent login/register)
 - [ ] Milestone Tracking
 - [ ] Daily Activity Training
 - [ ] AI-Powered Tutor
-- [ ] Parent Dashboard
+- [x] Parent Dashboard
 - [ ] Gamified Learning
 - [ ] Nutrition & Health Tracking
 - [ ] Vaccination Reminders
