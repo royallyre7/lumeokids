@@ -139,7 +139,7 @@ Track progress here. Check off when complete.
 
 ---
 
-## Key Modules (from royallyre7.md)
+## Key Modules
 
 ### Core Modules
 1. **Child Profile System** — Age, interests, learning level, strengths/weaknesses, personalized learning path
