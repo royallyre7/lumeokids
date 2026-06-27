@@ -26,9 +26,9 @@
 <!-- Update this section at the end of each session -->
 
 ### Status: `PAUSED`
-- **Last worked on**: 2026-06-27 — UI/UX Redesign + Code Review & Bug Fixes
+- **Last worked on**: 2026-06-27 — Security Hardening + Child Strengths Assessment Feature
 - **Branch**: `main`
-- **Last commit**: `4df13a7` — fix: multi-step form bug, extract shared utils, restore ref files
+- **Last commit**: `b3d885f` — feat: add child strengths assessment with archetype matching
 
 ### Session Summary (2026-06-27)
 
@@ -58,6 +58,15 @@
 - **Cache clean**: Stale `.next` build cache cleared
 - **Tested**: 13/13 tests pass (public pages, auth API, security, E2E flow)
 
+#### Phase 4 — Security Hardening + Child Assessment (commits `73b4314` → `b3d885f`)
+- **Security fixes**: Security headers (X-Frame-Options, HSTS, CSP), JWT session maxAge 24h, input max lengths, DB index on parentId, middleware covers API routes, generic registration error
+- **Child Assessment**: 10-section wizard (A–J) based on Child Strengths & Hobbies Discovery Tool + 8-cluster interest inventory (K)
+- **Archetype engine**: `src/lib/archetypes.ts` — scores 10 sections → matches 10 archetypes (Curious Explorer, Creative Innovator, Empathetic Leader, etc.) with strengths, activities, learning style, support guidance
+- **API**: `POST /api/assessments` + `GET /api/assessments?childId=X` — ownership-protected
+- **Results page**: Section score bars, archetype cards with match %, interest summary
+- **Child detail CTA**: Link to assessment (shows "Start Assessment" or "View Results")
+- **Reference docs removed**: Cleaned 5 planning docs from repo; fixed slides format to PechaKucha 6×20 template
+
 ### Actual Project Structure
 ```
 lumeokids/
@@ -78,14 +87,21 @@ lumeokids/
 │   │   │   ├── page.tsx            # Welcome + stats + child cards
 │   │   │   └── children/
 │   │   │       ├── new/page.tsx    # 2-step create form
-│   │   │       └── [id]/page.tsx   # Profile detail with icons
+│   │   │       └── [id]/
+│   │   │           ├── page.tsx     # Profile detail + assessment CTA
+│   │   │           └── assessment/
+│   │   │               ├── page.tsx      # 11-step assessment wizard
+│   │   │               └── results/
+│   │   │                   └── page.tsx  # Results + archetype cards
 │   │   └── api/
 │   │       ├── auth/
 │   │       │   ├── [...nextauth]/route.ts
 │   │       │   └── register/route.ts
-│   │       └── children/
-│   │           ├── route.ts
-│   │           └── [id]/route.ts
+│   │       ├── children/
+│   │       │   ├── route.ts
+│   │       │   └── [id]/route.ts
+│   │       └── assessments/
+│   │           └── route.ts         # POST + GET assessment
 │   ├── components/ui/
 │   │   ├── Button.tsx              # 4 variants, 3 sizes, href, loading
 │   │   ├── Input.tsx               # label + error + icon slot
@@ -97,7 +113,8 @@ lumeokids/
 │   │   ├── prisma.ts               # Prisma singleton
 │   │   ├── auth.ts                 # NextAuth config
 │   │   ├── server-auth.ts          # getSession / getCurrentUserId
-│   │   ├── validators.ts           # Zod schemas
+│   │   ├── validators.ts           # Zod schemas (register, login, child, assessment)
+│   │   ├── archetypes.ts           # 10 sections, 10 archetypes, scoring engine
 │   │   └── utils.ts                # calculateAge, getInitial, getTimeOfDay
 │   └── middleware.ts               # Auth guard for /dashboard/*
 ├── .claude/
@@ -113,8 +130,10 @@ lumeokids/
 
 ### Known Issues / Gotchas
 - Multi-step create form: step dividers split groups visually but **all inputs stay in DOM** (hidden, not conditional) — don't revert to `{step === 1 && (...)}`
+- Assessment form uses the same hidden-DOM pattern (11 steps: A–J + K, all in DOM)
 - Dev server needs `rm -rf .next` if page returns 500 (stale webpack cache on port change)
 - SQLite `.db` file in `prisma/` is gitignored — fresh clone needs `prisma migrate dev` and `prisma generate`
+- Assessment model stores JSON strings (sectionScores, interests, archetypes) — parse with `JSON.parse()` on read
 
 ---
 
