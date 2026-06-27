@@ -31,8 +31,23 @@ model Child {
   parentId String
   parent   User   @relation(fields: [parentId], references: [id], onDelete: Cascade)
 
+  assessments Assessment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([parentId])
+}
+
+model Assessment {
+  id            String   @id @default(uuid())
+  childId       String
+  child         Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  sectionScores String   // JSON: { A: { total: 42, questions: [3,5,4,...] }, B: {...}, ... }
+  interests     String   // JSON array of checked interest items
+  archetypes    String   // JSON: computed archetype matches from scoring
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([childId])
 }

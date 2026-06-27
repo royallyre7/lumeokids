@@ -5,6 +5,8 @@ import { calculateAge, getInitial } from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Badge, { getBadgeVariant } from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 
 const levelNames: Record<string, string> = {
   BEGINNER: "Beginner",
@@ -36,6 +38,11 @@ export default async function ChildDetailPage({
   if (!child || child.parentId !== userId) {
     notFound();
   }
+
+  const hasAssessment = await prisma.assessment.findFirst({
+    where: { childId: child.id },
+    select: { id: true },
+  });
 
   return (
     <div className="max-w-2xl mx-auto animate-fade-in">
@@ -74,6 +81,28 @@ export default async function ChildDetailPage({
             {calculateAge(child.dateOfBirth)} old
           </p>
         </div>
+
+        {/* Assessment CTA */}
+        <Card className="mt-6">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <h2 className="font-bold text-stone-700">
+                🧠 Strengths Assessment
+              </h2>
+              <p className="text-sm text-stone-500 mt-1">
+                {hasAssessment
+                  ? `${child.name} has a completed assessment. Review the results or re-take it.`
+                  : `Discover ${child.name}'s learning archetype with the 10-section strengths assessment.`}
+              </p>
+            </div>
+            <Button
+              href={`/dashboard/children/${child.id}/assessment`}
+              variant={hasAssessment ? "secondary" : "primary"}
+            >
+              {hasAssessment ? "View Results" : "Start Assessment"}
+            </Button>
+          </div>
+        </Card>
       </div>
 
       {/* Info Grid */}

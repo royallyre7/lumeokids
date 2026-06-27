@@ -32,6 +32,19 @@ export const childProfileSchema = z.object({
   weaknesses: z.string().max(500, "Weaknesses must be at most 500 characters").optional(),
 });
 
+export const assessmentSchema = z.object({
+  sectionScores: z.record(
+    z.string(),
+    z.object({
+      total: z.number().min(0).max(50),
+      questions: z.array(z.number().min(0).max(5)),
+    })
+  ),
+  interests: z.array(z.string()).max(20, "Too many interests selected"),
+});
+
+export type AssessmentInput = z.infer<typeof assessmentSchema>;
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ChildProfileInput = z.infer<typeof childProfileSchema>;
