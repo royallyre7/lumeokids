@@ -1,73 +1,65 @@
 ---
 marp: true
-theme: default
 paginate: true
+transition: fade
+# PechaKucha: 6 slides, 20s auto-advance. Do not change the count.
 auto-advance: 20
 ---
 
-# 🧒 LumeoKids
-## Child Profile System
-### AI-Powered Learning for Children
+<!-- slide 1 -->
+# Who's my person?
+<!-- 20s -->
 
-**@royallyre7** · ch-3 Personal Project
-
----
-
-## The Problem
-
-Parents want personalized learning for their kids, but:
-
-- Generic apps treat all children the same
-- No way to track individual strengths & weaknesses
-- Learning paths aren't adaptive to age or interests
-
-**LumeoKids solves this** with a profile-first approach — every child gets a personalized foundation.
+Parents who want **personalized learning** for their children — tracking strengths, weaknesses, interests, and age-appropriate paths.
 
 ---
 
-## How I Built It
+<!-- slide 2 -->
+# Their problem
 
-### Tech Stack
-- **Next.js 14** (App Router) + TypeScript
-- **Tailwind CSS** for styling
-- **Prisma** with SQLite for data
-- **NextAuth.js** (Credentials) for auth
-- **Zod** for validation
-
-### Methodology
-Small, frequent commits — each milestone is demoable independently. One vertical slice: **Register → Login → Create Profile → Dashboard**.
+- Generic apps treat **all kids the same**
+- No way to track individual **strengths & weaknesses**
+- Learning paths aren't adaptive to **age or interests**
+- Parents have **no dashboard** to see progress
 
 ---
 
-## MCP + Skill + Agent
+<!-- slide 3 -->
+# What I built
 
-| Piece | What | How Used |
-|-------|------|-----------|
-| **MCP** | `filesystem` | All file creation & editing via `.mcp.json` |
-| **Skill** | `db-migrate` | Ran `prisma migrate dev` after schema changes |
-| **Agent** | `api-tester` | Verified API routes return correct status codes |
+**LumeoKids** — an AI-powered child profile system:
 
-All three were **actually used** during development — not empty files.
-
----
-
-## What It Does (End-to-End)
-
-1. **Landing page** — Welcome + CTA to register
-2. **Registration** — Email/password signup with validation
-3. **Login** — Credentials auth via NextAuth.js
-4. **Dashboard** — Lists all child profiles with age & learning level
-5. **Create Child Profile** — Name, DOB, level, interests, strengths, weaknesses
-6. **Child Detail** — Full profile view with ownership protection
+- Landing page → Register → Login → Dashboard
+- Create child profiles with name, DOB, learning level, interests
+- Ownership-protected detail views
+- Responsive, kid-friendly UI (coral/sky/sunny palette)
 
 ---
 
-## What's Next & Thanks! 🙏
+<!-- slide 4 -->
+# How I built it
+- **MCP**: `.mcp.json` — filesystem access for Claude Code
+- **Skill**: `db-migrate` — ran Prisma migrations after schema changes
+- **Agent**: `api-tester` — verified API routes return correct status codes
+- **Stack**: Next.js 14, Tailwind, Prisma/SQLite, NextAuth, Zod
 
-- **Edit & Delete** profiles · PostgreSQL switch · Avatars
-- **AI Learning Path** from profile data · Milestone Tracking
+---
 
-**One vertical slice → platform grows from here.**
+<!-- slide 5 -->
+# Why it matters
 
-**Repo**: github.com/royallyre7/lumeokids  
-Built with Claude Code · vibecode.tours cohort-1
+One **vertical slice** becomes a full platform:
+
+- Milestone tracking · AI-powered tutor
+- Daily activities · Gamified learning
+- Nutrition & health · Vaccination reminders
+
+**Profile-first design** = every feature is personalized from day one.
+
+---
+
+<!-- slide 6 -->
+# Done checklist
+- [x] repo public — github.com/royallyre7/lumeokids
+- [x] MCP + skill + agent used — all three in repo
+- [x] report.md in team repo
