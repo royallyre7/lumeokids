@@ -23,14 +23,42 @@
 ---
 
 ## Current Session State
-<!-- Update this section at the end of each session -->
 
 ### Status: `PAUSED`
-- **Last worked on**: 2026-06-27 — Security Hardening + Child Strengths Assessment Feature
+- **Last worked on**: 2026-07-03 — Playful Bubbles UI Overhaul + Ch-4 Submission Prep
 - **Branch**: `main`
-- **Last commit**: `b3d885f` — feat: add child strengths assessment with archetype matching
+- **Last commit**: `16bc9f6` — Stop tracking ignored files
 
-### Session Summary (2026-06-27)
+### Session Summary (2026-07-03)
+
+#### Phase 5 — Playful Bubbles UI Design Overhaul (commit `a93f7ec`)
+- **New design tokens**: Lavender accent (`#a78bfa`), bubble/glow shadows, `prefers-reduced-motion` support
+- **New animations**: `bounceIn`, `popIn`, `float`, `floatSlow`, `floatDelayed`, `wiggle`, `shimmer`, `spin-slow` — spring-based cubic-bezier easing
+- **New CSS utilities**: `.glass` / `.glass-strong` (glassmorphism), `.blob` (decorative shapes), `.pill` (badges), `.card-accent` (colored top bar), `.stagger-children`, `.shimmer`, `.btn-gradient`
+- **2 new components**: `FloatingBlobs` (decorative background shapes), `ProgressRing` (SVG circular progress)
+- **Button**: Pill-shaped (`rounded-full`), gradient fills, new `lavender` variant, `icon` prop, `active:scale-95`
+- **Card**: New variants — `accent` (colored top bar), `glass` (glassmorphism), `interactive`. `accentColor` prop
+- **Input**: Added `hint` prop, `aria-invalid`/`aria-describedby`, `role="alert"` on errors
+- **Badge**: 5 new color variants (`coral`, `sky`, `lavender`, `mint`, `sunny`), optional `icon` emoji
+- **EmptyState**: Floating icon animation, decorative blobs background
+- **LogoutButton**: Gradient avatar, 3-dot menu icon, `popIn` dropdown
+- **Landing page**: Floating blobs, floating emojis, pill badges, 6 feature cards with accent bars, stats banner
+- **Auth layout**: Floating blobs, glassmorphism quote card, gradient avatar, subtle background decorations
+- **Dashboard**: Accent-colored stat cards, ring avatars, gradient user avatar, staggered children
+- **Child Detail**: Multi-color gradient header, floating stars, glass assessment card
+- **Create Form**: Gradient step indicators, icon inputs, descriptive step text
+- **Assessment**: Gradient progress bar, pill section labels, gradient score buttons, completion checkmarks
+- **Results**: Overall score ring, gradient bars, pill interest tags, staggered archetype cards
+- **Accessibility**: `role="alert"`, `aria-hidden`, `aria-invalid`/`aria-describedby`, `prefers-reduced-motion`
+
+#### Phase 6 — Ch-4 Submission Prep (commits `c22139e` → `16bc9f6`)
+- **LICENSE**: MIT license added to repo
+- **Screenshots**: 6 PNGs at 1280×800 (landing, login, register, dashboard, child detail, assessment results)
+- **Slides**: 10-slide product-intro deck (`slides/pitch.md`)
+- **Report**: Filled `report.md` with project details
+- **GitHub Release**: v1.0.0 release created as download URL
+- **Test data**: Assessment inserted for child-test-001 (Emma), archetype results populated
+- **Changes pushed**: `c274daf..16bc9f6` on `main`
 
 #### Phase 1 — Child Profile System MVP (commits `3d9f0e9` → `159d489`)
 - Project scaffolded (Next.js 14, Tailwind, Prisma/SQLite)
@@ -76,14 +104,14 @@ lumeokids/
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx              # Root layout (Nunito font)
-│   │   ├── page.tsx                # Landing page (hero + features)
+│   │   ├── page.tsx                # Landing page (hero + features + stats banner)
 │   │   ├── globals.css             # Tailwind + component layers + animations
 │   │   ├── (auth)/
 │   │   │   ├── layout.tsx          # Split-screen auth layout
 │   │   │   ├── login/page.tsx
 │   │   │   └── register/page.tsx
 │   │   ├── dashboard/
-│   │   │   ├── layout.tsx          # Sticky header + user menu
+│   │   │   ├── layout.tsx          # Sticky glass header + user menu
 │   │   │   ├── page.tsx            # Welcome + stats + child cards
 │   │   │   └── children/
 │   │   │       ├── new/page.tsx    # 2-step create form
@@ -103,12 +131,14 @@ lumeokids/
 │   │       └── assessments/
 │   │           └── route.ts         # POST + GET assessment
 │   ├── components/ui/
-│   │   ├── Button.tsx              # 4 variants, 3 sizes, href, loading
-│   │   ├── Input.tsx               # label + error + icon slot
-│   │   ├── Card.tsx                # base + hover + link variants
-│   │   ├── Badge.tsx               # beginner/intermediate/advanced
-│   │   ├── EmptyState.tsx          # icon + title + CTA
-│   │   └── LogoutButton.tsx        # dropdown menu
+│   │   ├── Button.tsx              # 5 variants (primary/secondary/outline/ghost/lavender), pill-shaped, gradient fills
+│   │   ├── Input.tsx               # label + error + icon + hint, ARIA support
+│   │   ├── Card.tsx                # default + accent + glass + interactive variants
+│   │   ├── Badge.tsx               # 8 color variants + optional emoji icon
+│   │   ├── EmptyState.tsx          # floating icon + decorative blobs + CTA
+│   │   ├── LogoutButton.tsx        # gradient avatar + popIn dropdown
+│   │   ├── FloatingBlobs.tsx       # Decorative floating blob shapes (Playful Bubbles)
+│   │   └── ProgressRing.tsx        # SVG circular progress with 5 color options
 │   ├── lib/
 │   │   ├── prisma.ts               # Prisma singleton
 │   │   ├── auth.ts                 # NextAuth config
@@ -117,16 +147,31 @@ lumeokids/
 │   │   ├── archetypes.ts           # 10 sections, 10 archetypes, scoring engine
 │   │   └── utils.ts                # calculateAge, getInitial, getTimeOfDay
 │   └── middleware.ts               # Auth guard for /dashboard/*
+├── screenshots/                    # 6 screenshots at 1280×800
+│   ├── 01-landing.png
+│   ├── 02-login.png
+│   ├── 03-register.png
+│   ├── 04-dashboard.png
+│   ├── 05-child-detail.png
+│   └── 06-assessment-results.png
+├── slides/
+│   └── pitch.md                    # 10-slide product-intro deck
 ├── .claude/
 │   ├── skills/db-migrate/SKILL.md
 │   └── agents/api-tester.md
 ├── .mcp.json
-├── slides.md                       # 6×20 Marp
-└── report.md                       # Full methodology + evidence
+├── LICENSE                         # MIT
+├── CLAUDE.md                       # This file — session memory
+└── report.md                       # Ch-4 submission report
 ```
 
 ### Next Step
-> **Edit & Delete Child Profiles** — Add `PUT`/`DELETE` routes + UI (edit button on detail page, delete with confirmation). Then proceed to **Milestone Tracking** module.
+> **Priority: Push to remote + Ch-4 team repo submission.** 
+> - Push latest commit to GitHub (if not already done)
+> - Clone team repo (`team-NN`), copy `report.md` → `ch-4/<username>/report.md`
+> - Open PR in team repo
+> - Run `doctor.sh ch-4` to verify
+> - **Then**: Edit & Delete Child Profiles — Add `PUT`/`DELETE` routes + UI (edit button on detail page, delete with confirmation). Then proceed to **Milestone Tracking** module.
 
 ### Known Issues / Gotchas
 - Multi-step create form: step dividers split groups visually but **all inputs stay in DOM** (hidden, not conditional) — don't revert to `{step === 1 && (...)}`
@@ -134,6 +179,10 @@ lumeokids/
 - Dev server needs `rm -rf .next` if page returns 500 (stale webpack cache on port change)
 - SQLite `.db` file in `prisma/` is gitignored — fresh clone needs `prisma migrate dev` and `prisma generate`
 - Assessment model stores JSON strings (sectionScores, interests, archetypes) — parse with `JSON.parse()` on read
+- **Playful Bubbles additions**: `FloatingBlobs` and `ProgressRing` are new components; `lavender` color added to Tailwind config
+- **Screenshots**: 6 PNGs in `screenshots/` — regenerate via Puppeteer if UI changes significantly
+- **GitHub Release**: v1.0.0 requires manual `tar` + `gh release create` to update archive after changes
+- **Test child**: `child-test-001` (Emma) has completed assessment data for archetype results demo
 
 ---
 
@@ -144,7 +193,12 @@ Track progress here. Check off when complete.
 - [x] Child Profile System
 - [x] Authentication (Parent login/register)
 - [x] Parent Dashboard
-- [x] UI/UX Redesign (warm palette, animations, reusable components)
+- [x] UI/UX Redesign (v1: warm palette, animations, reusable components)
+- [x] UI/UX Playful Bubbles Overhaul (v2: lavender accent, floating blobs, glassmorphism, spring animations, new components)
+- [x] Child Strengths Assessment (10-section wizard + archetype engine)
+- [x] Security Hardening (headers, JWT, input validation)
+- [x] Ch-4 Submission Prep (LICENSE, screenshots, slides, report, GitHub Release)
+- [ ] Deploy live URL (Vercel/SQLite alternative or Railway)
 - [ ] Edit & Delete Child Profiles
 - [ ] Milestone Tracking
 - [ ] Daily Activity Training
