@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import ProgressRing from "@/components/ui/ProgressRing";
 import { SECTIONS, INTEREST_CLUSTERS } from "@/lib/archetypes";
 
 const TOTAL_STEPS = 11; // 10 sections + 1 interest inventory
@@ -116,7 +117,7 @@ export default function AssessmentPage() {
     <div className="max-w-2xl mx-auto animate-slide-up">
       <Link
         href={`/dashboard/children/${childId}`}
-        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors mb-4"
+        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-coral-500 transition-colors mb-4"
       >
         ← Back to Child Profile
       </Link>
@@ -125,35 +126,35 @@ export default function AssessmentPage() {
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-xl font-extrabold text-stone-800 mb-1">
-            Child Strengths Assessment
+            🧠 Child Strengths Assessment
           </h1>
           <p className="text-sm text-stone-500">
-            Rate each statement based on your child's behavior over the last 3–6 months.
+            Rate each statement based on your child&apos;s behavior over the last 3–6 months.
           </p>
         </div>
 
-        {/* Progress bar */}
+        {/* Progress bar — Playful Bubbles */}
         <div className="mb-6">
           <div className="flex items-center justify-between text-xs text-stone-500 mb-2">
-            <span>
+            <span className="pill-coral">
               {isInterestStep
-                ? "Section K — Interests"
-                : `Section ${currentSection.key} — ${currentSection.label}`}
+                ? "📋 Section K — Interests"
+                : `${currentSection.emoji} Section ${currentSection.key} — ${currentSection.label}`}
             </span>
-            <span>
+            <span className="font-bold">
               Step {step + 1} of {TOTAL_STEPS} · {progressPct}%
             </span>
           </div>
-          <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-stone-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-coral-400 to-sky-400 rounded-full transition-all duration-300"
+              className="h-full bg-gradient-to-r from-coral-400 via-lavender-400 to-sky-400 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progressPct}%` }}
             />
           </div>
         </div>
 
-        {/* Section quick-nav (horizontal scroll) */}
-        <div className="flex gap-1 mb-6 overflow-x-auto pb-2">
+        {/* Section quick-nav (horizontal scroll) — Playful Bubbles */}
+        <div className="flex gap-1.5 mb-6 overflow-x-auto pb-2">
           {SECTIONS.map((s, i) => {
             const sectionTotal = scores[s.key].reduce((a, b) => a + b, 0);
             const isComplete = sectionTotal > 0;
@@ -161,34 +162,42 @@ export default function AssessmentPage() {
             return (
               <button
                 key={s.key}
+                type="button"
                 onClick={() => setStep(i)}
-                className={`flex-shrink-0 w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center transition-colors ${
+                className={`flex-shrink-0 w-9 h-9 rounded-full text-xs font-bold flex items-center justify-center transition-all duration-200 ${
                   isCurrent
-                    ? "bg-coral-500 text-white"
+                    ? "bg-gradient-to-br from-coral-500 to-lavender-500 text-white shadow-bubble scale-110"
                     : isComplete
-                      ? "bg-mint-100 text-mint-600"
-                      : "bg-stone-100 text-stone-400"
+                      ? "bg-mint-100 text-mint-600 hover:bg-mint-200"
+                      : "bg-stone-100 text-stone-400 hover:bg-stone-200"
                 }`}
                 title={s.label}
               >
-                {s.key}
+                {isComplete && !isCurrent ? "✓" : s.key}
               </button>
             );
           })}
-          <span className="flex-shrink-0 w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center bg-stone-100 text-stone-400">
+          <span className={`flex-shrink-0 w-9 h-9 rounded-full text-xs font-bold flex items-center justify-center transition-all duration-200 ${
+            isInterestStep
+              ? "bg-gradient-to-br from-coral-500 to-lavender-500 text-white shadow-bubble scale-110"
+              : "bg-stone-100 text-stone-400"
+          }`}>
             K
           </span>
         </div>
 
         {/* Form Error */}
         {formError && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm flex items-center gap-2">
-            <span>⚠️</span> {formError}
+          <div
+            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm flex items-center gap-2"
+            role="alert"
+          >
+            <span aria-hidden="true">⚠️</span> {formError}
           </div>
         )}
 
         {/* Rating Scale Legend */}
-        <div className="mb-6 p-3 bg-stone-50 rounded-xl text-xs text-stone-500 flex flex-wrap gap-x-4 gap-y-1">
+        <div className="mb-6 p-3 bg-gradient-to-r from-coral-50 to-lavender-50 rounded-xl text-xs text-stone-500 flex flex-wrap gap-x-4 gap-y-1">
           <span><strong>0</strong> = N/A</span>
           <span><strong>1</strong> = Almost Never</span>
           <span><strong>2</strong> = Rarely</span>
@@ -208,11 +217,11 @@ export default function AssessmentPage() {
               {section.label}
             </h2>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
               {section.questions.map((question, qi) => (
                 <div
                   key={qi}
-                  className="bg-stone-50 rounded-xl p-4 border border-stone-100"
+                  className="bg-stone-50 rounded-2xl p-4 border border-stone-100 hover:border-coral-200 transition-colors"
                 >
                   <p className="text-sm font-medium text-stone-700 mb-3">
                     {qi + 1}. {question}
@@ -225,10 +234,10 @@ export default function AssessmentPage() {
                         onClick={() =>
                           setQuestionScore(section.key, qi, val)
                         }
-                        className={`flex-1 py-2 rounded-lg text-sm font-bold transition-colors ${
+                        className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all duration-200 ${
                           scores[section.key]?.[qi] === val
-                            ? "bg-coral-500 text-white shadow-sm"
-                            : "bg-white border border-stone-200 text-stone-500 hover:border-coral-300"
+                            ? "bg-gradient-to-br from-coral-500 to-lavender-500 text-white shadow-bubble scale-105"
+                            : "bg-white border border-stone-200 text-stone-500 hover:border-coral-300 hover:bg-coral-50"
                         }`}
                       >
                         {val}
@@ -240,10 +249,10 @@ export default function AssessmentPage() {
             </div>
 
             {/* Section Total */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-coral-50 to-sky-50 rounded-xl text-center">
+            <div className="mt-6 p-4 bg-gradient-to-r from-coral-50 via-lavender-50 to-sky-50 rounded-2xl text-center">
               <p className="text-sm text-stone-500">
                 Section Total:{" "}
-                <span className="text-xl font-extrabold text-coral-600">
+                <span className="text-xl font-extrabold text-gradient">
                   {scores[section.key]?.reduce((a, b) => a + b, 0) || 0}
                 </span>{" "}
                 / {section.maxScore}
@@ -266,7 +275,7 @@ export default function AssessmentPage() {
             {INTEREST_CLUSTERS.map((cluster) => (
               <div
                 key={cluster.key}
-                className="bg-stone-50 rounded-xl p-4 border border-stone-100"
+                className="bg-stone-50 rounded-2xl p-4 border border-stone-100 hover:border-lavender-200 transition-colors"
               >
                 <h3 className="font-bold text-stone-700 mb-3 text-sm">
                   {cluster.emoji} {cluster.label}

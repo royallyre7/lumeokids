@@ -14,22 +14,27 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-stone-50">
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-stone-100 shadow-sm">
+      {/* Sticky Header — Playful Bubbles glassmorphism */}
+      <header className="sticky top-0 z-30 glass-strong shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           {/* Brand */}
           <Link
             href="/dashboard"
-            className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-coral-500 to-coral-700 tracking-tight"
+            className="text-lg font-extrabold text-gradient tracking-tight"
           >
             🧒 LumeoKids
           </Link>
 
           {/* User */}
           <div className="flex items-center gap-3">
-            <span className="text-sm text-stone-500 hidden sm:block font-medium">
-              {name}
-            </span>
+            <div className="hidden sm:flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-coral-400 to-lavender-500 flex items-center justify-center text-white text-xs font-bold">
+                {initial}
+              </div>
+              <span className="text-sm text-stone-600 font-medium">
+                {name}
+              </span>
+            </div>
             <LogoutButton />
           </div>
         </div>

@@ -4,12 +4,14 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
   icon?: ReactNode;
+  hint?: string;
 }
 
 export default function Input({
   label,
   error,
   icon,
+  hint,
   id,
   className = "",
   ...props
@@ -28,15 +30,19 @@ export default function Input({
         <input
           id={id}
           className={`input-field ${icon ? "pl-10" : ""} ${
-            error ? "border-red-300 focus:border-red-400 focus:ring-red-100" : ""
+            error
+              ? "border-red-300 focus:border-red-400 focus:ring-red-100"
+              : ""
           } ${className}`}
+          aria-invalid={error ? "true" : undefined}
+          aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
           {...props}
         />
       </div>
       {error && (
-        <p className="input-error">
+        <p id={`${id}-error`} className="input-error" role="alert">
           <svg
-            className="w-4 h-4"
+            className="w-4 h-4 shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -50,6 +56,11 @@ export default function Input({
             />
           </svg>
           {error}
+        </p>
+      )}
+      {hint && !error && (
+        <p id={`${id}-hint`} className="text-xs text-stone-400 mt-1.5">
+          {hint}
         </p>
       )}
     </div>

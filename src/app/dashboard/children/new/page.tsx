@@ -49,47 +49,49 @@ export default function NewChildPage() {
     <div className="max-w-lg mx-auto animate-slide-up">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors mb-6"
+        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-coral-500 transition-colors mb-6"
       >
         ← Back to Dashboard
       </Link>
 
       <Card>
-        {/* Step Indicator */}
+        {/* Step Indicator — Playful Bubbles */}
         <div className="flex items-center gap-3 mb-8">
           <button
+            type="button"
             onClick={() => setStep(1)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
               step === 1
-                ? "bg-coral-100 text-coral-600"
-                : "bg-stone-100 text-stone-400"
+                ? "bg-gradient-to-r from-coral-500 to-coral-600 text-white shadow-bubble"
+                : "bg-stone-100 text-stone-400 hover:bg-stone-200"
             }`}
           >
             <span
-              className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+              className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-extrabold ${
                 step === 1
-                  ? "bg-coral-500 text-white"
-                  : "bg-stone-300 text-stone-500"
+                  ? "bg-white/30 text-white"
+                  : "bg-stone-300 text-white"
               }`}
             >
               1
             </span>
             Basics
           </button>
-          <div className="w-8 h-0.5 bg-stone-200 rounded" />
+          <div className={`w-8 h-1 rounded-full transition-colors ${step === 2 ? "bg-coral-300" : "bg-stone-200"}`} />
           <button
+            type="button"
             onClick={() => setStep(2)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
               step === 2
-                ? "bg-coral-100 text-coral-600"
-                : "bg-stone-100 text-stone-400"
+                ? "bg-gradient-to-r from-coral-500 to-coral-600 text-white shadow-bubble"
+                : "bg-stone-100 text-stone-400 hover:bg-stone-200"
             }`}
           >
             <span
-              className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+              className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-extrabold ${
                 step === 2
-                  ? "bg-coral-500 text-white"
-                  : "bg-stone-300 text-stone-500"
+                  ? "bg-white/30 text-white"
+                  : "bg-stone-300 text-white"
               }`}
             >
               2
@@ -98,13 +100,21 @@ export default function NewChildPage() {
           </button>
         </div>
 
-        <h1 className="text-xl font-extrabold text-stone-800 mb-6">
-          Create Child Profile
+        <h1 className="text-xl font-extrabold text-stone-800 mb-2">
+          Create Child Profile ✨
         </h1>
+        <p className="text-sm text-stone-500 mb-6">
+          {step === 1
+            ? "Let's start with the basics about your child."
+            : "Add some details to personalize the learning experience."}
+        </p>
 
         {formError && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm flex items-center gap-2">
-            <span>⚠️</span> {formError}
+          <div
+            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm flex items-center gap-2"
+            role="alert"
+          >
+            <span aria-hidden="true">⚠️</span> {formError}
           </div>
         )}
 
@@ -119,6 +129,11 @@ export default function NewChildPage() {
               required
               placeholder="Your child's full name"
               error={errors.name?.[0]}
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              }
             />
 
             <Input
@@ -128,6 +143,11 @@ export default function NewChildPage() {
               type="date"
               required
               error={errors.dateOfBirth?.[0]}
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              }
             />
 
             <div>
@@ -161,6 +181,12 @@ export default function NewChildPage() {
               type="text"
               placeholder="e.g., drawing, puzzles, animals"
               error={errors.interests?.[0]}
+              hint="Separate multiple interests with commas"
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
             />
 
             <Input
@@ -170,6 +196,11 @@ export default function NewChildPage() {
               type="text"
               placeholder="e.g., good memory, curious, creative"
               error={errors.strengths?.[0]}
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
             />
 
             <Input
@@ -179,11 +210,16 @@ export default function NewChildPage() {
               type="text"
               placeholder="e.g., short attention span, shy"
               error={errors.weaknesses?.[0]}
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              }
             />
           </div>
 
           {/* Navigation buttons */}
-          <div className="mt-5">
+          <div className="mt-6">
             {step === 1 ? (
               <Button
                 type="button"

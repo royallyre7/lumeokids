@@ -13,6 +13,14 @@ const levelNames: Record<string, string> = {
   ADVANCED: "Advanced",
 };
 
+const avatarColors = [
+  { bg: "bg-coral-100", text: "text-coral-600", ring: "ring-coral-200" },
+  { bg: "bg-sky-100", text: "text-sky-600", ring: "ring-sky-200" },
+  { bg: "bg-lavender-100", text: "text-lavender-600", ring: "ring-lavender-200" },
+  { bg: "bg-mint-100", text: "text-mint-600", ring: "ring-mint-200" },
+  { bg: "bg-sunny-100", text: "text-sunny-600", ring: "ring-sunny-200" },
+];
+
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
   const userId = (session?.user as { id: string })?.id;
@@ -42,10 +50,10 @@ export default async function DashboardPage() {
         </Button>
       </div>
 
-      {/* === Stats Row === */}
+      {/* === Stats Row — Playful Bubbles === */}
       {children.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
-          <Card>
+        <div className="grid grid-cols-3 gap-4 mb-8 stagger-children">
+          <Card variant="accent" accentColor="coral">
             <p className="text-3xl font-extrabold text-coral-500">
               {children.length}
             </p>
@@ -53,7 +61,7 @@ export default async function DashboardPage() {
               {children.length > 1 ? "Children" : "Child"}
             </p>
           </Card>
-          <Card>
+          <Card variant="accent" accentColor="sky">
             <p className="text-3xl font-extrabold text-sky-600">
               {children
                 .filter((c) => c.learningLevel === "ADVANCED")
@@ -61,7 +69,7 @@ export default async function DashboardPage() {
             </p>
             <p className="text-sm text-stone-500 mt-1 font-medium">Advanced</p>
           </Card>
-          <Card className="col-span-2 sm:col-span-1">
+          <Card variant="accent" accentColor="mint">
             <p className="text-3xl font-extrabold text-mint-500">
               {Math.round(
                 children.reduce((sum, c) => {
@@ -92,15 +100,9 @@ export default async function DashboardPage() {
           <h2 className="text-lg font-bold text-stone-700 mb-4">
             Your Children
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 stagger-children">
             {children.map((child, i) => {
-              const colorClasses = [
-                "bg-coral-100 text-coral-600",
-                "bg-sky-100 text-sky-600",
-                "bg-mint-100 text-mint-600",
-                "bg-sunny-100 text-sunny-600",
-              ];
-              const colorClass = colorClasses[i % colorClasses.length];
+              const colors = avatarColors[i % avatarColors.length];
 
               return (
                 <Card
@@ -111,7 +113,7 @@ export default async function DashboardPage() {
                   {/* Avatar + Name + Badge */}
                   <div className="flex items-start gap-4 mb-4">
                     <div
-                      className={`w-12 h-12 rounded-2xl ${colorClass} flex items-center justify-center text-lg font-extrabold flex-shrink-0`}
+                      className={`w-12 h-12 rounded-2xl ${colors.bg} ${colors.text} ring-2 ${colors.ring} flex items-center justify-center text-lg font-extrabold flex-shrink-0`}
                     >
                       {getInitial(child.name)}
                     </div>

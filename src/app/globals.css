@@ -11,6 +11,17 @@
   *:focus-visible {
     @apply outline-2 outline-offset-2 outline-coral-400;
   }
+
+  /* Prefers-reduced-motion: disable all animations */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
 @layer components {
@@ -31,15 +42,25 @@
     @apply text-sm text-red-500 mt-1.5 flex items-center gap-1;
   }
 
-  /* === Card === */
+  /* === Card — Playful Bubbles === */
   .card {
-    @apply bg-white rounded-3xl border border-stone-100
+    @apply bg-white rounded-3xl border-0
            shadow-card transition-all duration-300;
   }
 
   .card-hoverable {
-    @apply card hover:shadow-card-hover hover:-translate-y-0.5
-           active:shadow-card-active active:translate-y-0;
+    @apply card hover:shadow-card-hover hover:-translate-y-1 hover:scale-[1.01]
+           active:shadow-card-active active:translate-y-0 active:scale-100;
+  }
+
+  /* Card with colored top accent bar */
+  .card-accent {
+    @apply card overflow-hidden;
+  }
+
+  .card-accent::before {
+    content: "";
+    @apply h-1.5 w-full bg-gradient-to-r from-coral-400 to-coral-500;
   }
 
   /* === Page shell === */
@@ -55,12 +76,114 @@
   .section-subtitle {
     @apply text-stone-500 mt-1;
   }
+
+  /* === Glassmorphism === */
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/40;
+  }
+
+  .glass-strong {
+    @apply bg-white/85 backdrop-blur-2xl border border-white/50;
+  }
+
+  /* === Floating blob (decorative) === */
+  .blob {
+    @apply absolute rounded-full blur-3xl opacity-30 pointer-events-none;
+  }
+
+  .blob-coral {
+    @apply bg-coral-300;
+  }
+
+  .blob-sky {
+    @apply bg-sky-300;
+  }
+
+  .blob-lavender {
+    @apply bg-lavender-300;
+  }
+
+  .blob-sunny {
+    @apply bg-sunny-300;
+  }
+
+  .blob-mint {
+    @apply bg-mint-300;
+  }
+
+  /* === Pill badge === */
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full
+           text-xs font-bold tracking-wide;
+  }
+
+  .pill-coral {
+    @apply pill bg-coral-100 text-coral-700;
+  }
+
+  .pill-sky {
+    @apply pill bg-sky-100 text-sky-700;
+  }
+
+  .pill-lavender {
+    @apply pill bg-lavender-100 text-lavender-700;
+  }
+
+  .pill-mint {
+    @apply pill bg-mint-100 text-mint-700;
+  }
+
+  .pill-sunny {
+    @apply pill bg-sunny-100 text-sunny-700;
+  }
+
+  /* === Progress ring (SVG-based) === */
+  .progress-ring-circle {
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+
+  /* === Shimmer loading === */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      #f5f5f4 25%,
+      #e7e5e4 50%,
+      #f5f5f4 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  /* === Staggered children animation === */
+  .stagger-children > * {
+    opacity: 0;
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+  .stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+  .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+  .stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+  .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+  .stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+  .stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+  .stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
 }
 
 @layer utilities {
-  /* Gradient text */
+  /* Gradient text — Playful Bubbles */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-coral-500 to-coral-700;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-coral-500 via-coral-600 to-lavender-500;
+  }
+
+  .text-gradient-warm {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-coral-500 to-sunny-500;
+  }
+
+  .text-gradient-cool {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-lavender-500;
   }
 
   /* Background pattern — subtle dots */
@@ -69,14 +192,42 @@
     background-size: 20px 20px;
   }
 
-  /* Hero gradient */
+  /* Hero gradient — Playful Bubbles (more vibrant) */
   .bg-hero {
     background: linear-gradient(
       135deg,
       #fff5f0 0%,
-      #f0f9ff 40%,
-      #fef3c7 70%,
+      #faf5ff 25%,
+      #f0f9ff 50%,
+      #fef3c7 75%,
       #f0fdf4 100%
     );
   }
+
+  /* Button gradient */
+  .btn-gradient {
+    @apply bg-gradient-to-r from-coral-500 to-coral-600
+           hover:from-coral-600 hover:to-coral-700;
+  }
+
+  .btn-gradient-lavender {
+    @apply bg-gradient-to-r from-lavender-500 to-lavender-600
+           hover:from-lavender-600 hover:to-lavender-700;
+  }
+
+  /* Bounce click effect */
+  .bounce-click {
+    @apply active:scale-95 transition-transform duration-100;
+  }
+}
+
+/* Keyframe definitions (outside layers for global access) */
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.5) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }

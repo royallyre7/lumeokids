@@ -23,6 +23,15 @@ const iconMap: Record<string, string> = {
   Weaknesses: "🎯",
 };
 
+const accentMap: Record<string, "coral" | "sky" | "lavender" | "mint" | "sunny"> = {
+  Age: "coral",
+  "Date of Birth": "sky",
+  "Learning Level": "lavender",
+  Interests: "sunny",
+  Strengths: "mint",
+  Weaknesses: "coral",
+};
+
 export default async function ChildDetailPage({
   params,
 }: {
@@ -48,18 +57,22 @@ export default async function ChildDetailPage({
     <div className="max-w-2xl mx-auto animate-fade-in">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors mb-6"
+        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-coral-500 transition-colors mb-6"
       >
         ← Back to Dashboard
       </Link>
 
-      {/* Profile Header */}
-      <div className="bg-white rounded-3xl border border-stone-100 shadow-card overflow-hidden">
+      {/* Profile Header — Playful Bubbles */}
+      <div className="card overflow-hidden">
         {/* Color bar + avatar */}
-        <div className="bg-gradient-to-r from-coral-400 to-coral-500 h-24 relative">
-          <div className="absolute -bottom-8 left-8">
-            <div className="w-20 h-20 rounded-3xl bg-white shadow-lg flex items-center justify-center">
-              <span className="text-3xl font-extrabold text-coral-500">
+        <div className="bg-gradient-to-r from-coral-400 via-lavender-400 to-sky-400 h-28 relative">
+          {/* Floating decorations */}
+          <div className="absolute top-4 right-6 text-2xl animate-float opacity-60" aria-hidden="true">⭐</div>
+          <div className="absolute top-6 right-20 text-xl animate-float-slow opacity-40" aria-hidden="true">✨</div>
+
+          <div className="absolute -bottom-10 left-8">
+            <div className="w-22 h-22 rounded-3xl bg-white shadow-bubble flex items-center justify-center ring-4 ring-white">
+              <span className="text-3xl font-extrabold text-gradient">
                 {getInitial(child.name)}
               </span>
             </div>
@@ -67,7 +80,7 @@ export default async function ChildDetailPage({
         </div>
 
         {/* Name + Badge */}
-        <div className="pt-12 pb-8 px-8">
+        <div className="pt-14 pb-8 px-8">
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-2xl font-extrabold text-stone-800">
               {child.name}
@@ -83,33 +96,36 @@ export default async function ChildDetailPage({
         </div>
 
         {/* Assessment CTA */}
-        <Card className="mt-6">
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div>
-              <h2 className="font-bold text-stone-700">
-                🧠 Strengths Assessment
-              </h2>
-              <p className="text-sm text-stone-500 mt-1">
-                {hasAssessment
-                  ? `${child.name} has a completed assessment. Review the results or re-take it.`
-                  : `Discover ${child.name}'s learning archetype with the 10-section strengths assessment.`}
-              </p>
+        <div className="px-8 pb-8">
+          <Card variant="glass">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <h2 className="font-bold text-stone-700">
+                  🧠 Strengths Assessment
+                </h2>
+                <p className="text-sm text-stone-500 mt-1">
+                  {hasAssessment
+                    ? `${child.name} has a completed assessment. Review the results or re-take it.`
+                    : `Discover ${child.name}'s learning archetype with the 10-section strengths assessment.`}
+                </p>
+              </div>
+              <Button
+                href={`/dashboard/children/${child.id}/assessment`}
+                variant={hasAssessment ? "secondary" : "primary"}
+              >
+                {hasAssessment ? "View Results" : "Start Assessment"}
+              </Button>
             </div>
-            <Button
-              href={`/dashboard/children/${child.id}/assessment`}
-              variant={hasAssessment ? "secondary" : "primary"}
-            >
-              {hasAssessment ? "View Results" : "Start Assessment"}
-            </Button>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
 
-      {/* Info Grid */}
-      <div className="grid gap-4 mt-6 sm:grid-cols-2">
+      {/* Info Grid — Playful Bubbles accent cards */}
+      <div className="grid gap-4 mt-6 sm:grid-cols-2 stagger-children">
         <InfoCard
           label="Age"
           value={calculateAge(child.dateOfBirth)}
+          accent={accentMap["Age"]}
         />
         <InfoCard
           label="Date of Birth"
@@ -118,39 +134,54 @@ export default async function ChildDetailPage({
             month: "long",
             day: "numeric",
           })}
+          accent={accentMap["Date of Birth"]}
         />
         <InfoCard
           label="Learning Level"
           value={levelNames[child.learningLevel] || child.learningLevel}
+          accent={accentMap["Learning Level"]}
         />
         <InfoCard
           label="Interests"
           value={child.interests || "Not specified"}
+          accent={accentMap["Interests"]}
         />
         <InfoCard
           label="Strengths"
           value={child.strengths || "Not specified"}
+          accent={accentMap["Strengths"]}
         />
         <InfoCard
           label="Weaknesses"
           value={child.weaknesses || "Not specified"}
+          accent={accentMap["Weaknesses"]}
         />
       </div>
     </div>
   );
 }
 
-function InfoCard({ label, value }: { label: string; value: string }) {
+function InfoCard({
+  label,
+  value,
+  accent = "coral",
+}: {
+  label: string;
+  value: string;
+  accent?: "coral" | "sky" | "lavender" | "mint" | "sunny";
+}) {
   const icon = iconMap[label] || "📋";
   return (
-    <div className="bg-white rounded-2xl border border-stone-100 shadow-card p-5 flex items-start gap-4">
-      <div className="text-2xl flex-shrink-0">{icon}</div>
-      <div className="min-w-0">
-        <dt className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-1">
-          {label}
-        </dt>
-        <dd className="text-stone-800 font-semibold break-words">{value}</dd>
+    <Card variant="accent" accentColor={accent}>
+      <div className="flex items-start gap-4">
+        <div className="text-2xl flex-shrink-0">{icon}</div>
+        <div className="min-w-0">
+          <dt className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-1">
+            {label}
+          </dt>
+          <dd className="text-stone-800 font-semibold break-words">{value}</dd>
+        </div>
       </div>
-    </div>
+    </Card>
   );
 }
