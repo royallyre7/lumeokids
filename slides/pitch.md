@@ -1,65 +1,120 @@
 ---
 marp: true
 paginate: true
-transition: fade
-# PechaKucha: 6 slides, 20s auto-advance. Do not change the count.
-auto-advance: 20
+theme: default
 ---
 
 <!-- slide 1 -->
-# Who's my person?
-<!-- 20s -->
+# 🧒 LumeoKids
+## AI-Powered Learning for Children
 
-Parents who want **personalized learning** for their children — tracking strengths, weaknesses, interests, and age-appropriate paths.
+A platform that helps parents personalize their child's learning journey
 
 ---
 
 <!-- slide 2 -->
-# Their problem
+# The Problem
 
-- Generic apps treat **all kids the same**
-- No way to track individual **strengths & weaknesses**
-- Learning paths aren't adaptive to **age or interests**
-- Parents have **no dashboard** to see progress
+- Generic learning apps treat **all kids the same**
+- Parents lack tools to track **individual strengths & weaknesses**
+- No easy way to understand a child's **learning archetype**
+- Busy parents need a **simple, unified dashboard**
 
 ---
 
 <!-- slide 3 -->
-# What I built
+# What LumeoKids Does
 
-**LumeoKids** — an AI-powered child profile system:
-
-- Landing page → Register → Login → Dashboard
-- Create child profiles with name, DOB, learning level, interests
-- Ownership-protected detail views
-- Responsive, kid-friendly UI (coral/sky/sunny palette)
+- 📋 **Child Profiles** — Name, age, interests, strengths, learning level
+- 🧠 **Strengths Assessment** — 10-section wizard to discover learning archetypes
+- 🎯 **Archetype Matching** — AI-powered scoring matches 10 learning archetypes
+- 📊 **Parent Dashboard** — Stats, profiles, and insights at a glance
+- 🎨 **Playful Bubbles UI** — Warm, kid-friendly design with floating animations
 
 ---
 
 <!-- slide 4 -->
-# How I built it
-- **MCP**: `.mcp.json` — filesystem access for Claude Code
-- **Skill**: `db-migrate` — ran Prisma migrations after schema changes
-- **Agent**: `api-tester` — verified API routes return correct status codes
-- **Stack**: Next.js 14, Tailwind, Prisma/SQLite, NextAuth, Zod
+# How It Works
+
+1. **Register** a parent account
+2. **Create** a child profile with basic info
+3. **Take** the 10-section strengths assessment
+4. **Discover** your child's learning archetype & recommended activities
+5. **Track** growth over time on the dashboard
 
 ---
 
 <!-- slide 5 -->
-# Why it matters
+# Live Demo
 
-One **vertical slice** becomes a full platform:
+| | |
+|---|---|
+| 🏠 Landing | `lumeokids.vercel.app` |
+| 📊 Dashboard | Registered users |
+| 🧠 Assessment | Per-child profile |
+| 🎯 Results | Archetype + recommendations |
 
-- Milestone tracking · AI-powered tutor
-- Daily activities · Gamified learning
-- Nutrition & health · Vaccination reminders
-
-**Profile-first design** = every feature is personalized from day one.
+**Test account:** `uitest@example.com` / `password123`
 
 ---
 
 <!-- slide 6 -->
-# Done checklist
-- [x] repo public — github.com/royallyre7/lumeokids
-- [x] MCP + skill + agent used — all three in repo
-- [x] report.md in team repo
+# Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Styling | Tailwind CSS (Playful Bubbles) |
+| Database | SQLite (dev) / PostgreSQL (prod) |
+| ORM | Prisma |
+| Auth | NextAuth.js (JWT) |
+| AI | Archetype scoring engine |
+| Deployment | Vercel + GitHub Releases |
+
+---
+
+<!-- slide 7 -->
+# Key Features
+
+- ✅ Authentication (register/login with session management)
+- ✅ CRUD child profile system (ownership-protected)
+- ✅ 10-section strengths assessment wizard
+- ✅ Archetype engine (10 archetypes, zone scoring)
+- ✅ Responsive Playful Bubbles design (coral, lavender, sky palette)
+- ✅ Accessibility (ARIA labels, reduced-motion support)
+
+---
+
+<!-- slide 8 -->
+# Roadmap
+
+- ✏️ Edit & Delete child profiles
+- 📈 Milestone tracking (cognitive, motor, emotional)
+- 🤖 AI-powered tutor (adaptive lessons)
+- 🎮 Gamified learning (badges, rewards)
+- 🍎 Nutrition & health tracking
+- 💉 Vaccination reminders
+- 📱 Offline mode + cloud sync
+
+---
+
+<!-- slide 9 -->
+# Why LumeoKids?
+
+> "Every child deserves a learning journey as unique as they are."
+
+- **Profile-first design** — every feature personalized from day one
+- **Research-backed** — based on child strengths & hobbies discovery methodology
+- **Parent-friendly** — simple, warm, intuitive interface
+- **Open source** — MIT licensed, built in public
+
+---
+
+<!-- slide 10 -->
+# Thank You
+
+🔗 **GitHub:** github.com/royallyre7/lumeokids
+📦 **Download:** github.com/royallyre7/lumeokids/releases
+📧 **Contact:** @royallyre7
+
+**Built with ❤️ for parents & children everywhere**
