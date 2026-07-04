@@ -2,37 +2,49 @@
 
 **An AI-powered learning and development platform for children.**
 
-LumeoKids helps parents track their child's growth, personalize learning paths, and support development across cognitive, motor, emotional, and language skills — all in one place.
+LumeoKids helps parents track their child's growth, discover learning archetypes through strengths assessments, and personalize development journeys — all in a warm, playful platform.
+
+<p align="center">
+  <img src="screenshots/01-landing.png" alt="LumeoKids Landing Page" width="600">
+</p>
 
 ---
 
-## ✨ Features
+## ✨ What's Built
 
-### 🎯 Core Modules
+### 🧩 Child Profile System
+Create and manage child profiles with name, date of birth, learning level, interests, strengths, and weaknesses. Each profile is ownership-protected.
 
-| Module | Description |
-|--------|-------------|
-| **Child Profile System** | Age, interests, learning level, strengths/weaknesses, personalized learning path |
-| **Milestone Tracking** | Cognitive, motor, emotional, language milestones with delay alerts |
-| **Daily Activity Training** | Puzzles, memory games, speech practice, math basics, parent-child tasks |
-| **AI-Powered Tutor** | Adaptive lessons, voice-based explanations, story-based learning |
-| **Parent Dashboard** | Charts, weekly progress, alerts, insights |
-| **Gamified Learning** | Badges, rewards, avatar growth system |
-| **Nutrition & Health Tracking** | Meals, sleep, mood, temperature logging |
-| **Vaccination & Medical Reminders** | Auto-generated schedules, alerts, doctor visit notes |
-| **AI Parenting Chatbot** | Behavior questions, learning advice, routine planning |
-| **Offline Mode** | Works without internet, syncs when online |
-| **Multi-Child Support** | Separate profiles, shared parent dashboard |
+### 🧠 Strengths Assessment
+A 10-section wizard (A–J) plus an interest inventory (K) that evaluates a child across curiosity, creativity, persistence, emotional intelligence, leadership, and more. The **archetype engine** scores responses and matches children to one of 10 learning archetypes:
 
-### 🚀 Advanced AI Features
+- 🔭 The Curious Explorer
+- 🎨 The Creative Innovator
+- 🏆 The Determined Achiever
+- 🌟 The Empathetic Leader
+- 🤝 The Social Connector
+- 🧩 The Analytical Problem-Solver
+- 🎭 The Performing Artist
+- 💛 The Compassionate Helper
+- 🛠️ The Independent Builder
+- 💡 The Creative Divergent Thinker
 
-| Feature | Description |
-|---------|-------------|
-| **Adaptive Learning Engine** | Difficulty adjusts automatically, tracks mastery level |
-| **Emotion Recognition** | Voice tone analysis, drawing analysis, stress/mood detection |
-| **Speech Therapy Tools** | Pronunciation scoring, AI feedback, daily practice |
-| **Parent-Child Joint Activities** | Bonding tasks, weekend challenges, creative projects |
-| **Cloud Sync + Backup** | Multi-device support, secure storage |
+Each archetype comes with core strengths, recommended activities, learning style guidance, and support recommendations.
+
+### 👨‍👩‍👧 Parent Dashboard
+A welcoming dashboard with stats, child cards with colored avatars, and quick access to profiles and assessments.
+
+### 🔐 Authentication
+Parent registration and login with NextAuth.js credentials provider and JWT sessions. Middleware guards all dashboard routes.
+
+### 🎨 Playful Bubbles UI Design
+A warm, kid-friendly design system featuring:
+
+- **Colors**: Coral (primary), lavender (accent), sky, sunny, mint
+- **Animations**: Floating blobs, bouncy spring easing, staggered pop-ins, soft pulse
+- **Components**: Pill-shaped gradient buttons, glassmorphism cards, progress rings, floating decorations
+- **Typography**: Nunito — rounded, friendly font
+- **Accessibility**: `prefers-reduced-motion` support, ARIA labels, semantic HTML
 
 ---
 
@@ -41,13 +53,13 @@ LumeoKids helps parents track their child's growth, personalize learning paths, 
 | Layer | Technology |
 |-------|------------|
 | Frontend | Next.js 14 (App Router) |
-| Styling | Tailwind CSS |
+| Styling | Tailwind CSS (Playful Bubbles design system) |
 | Backend | Next.js API Routes |
-| Database | PostgreSQL |
+| Database | SQLite (development) / PostgreSQL (production) |
 | ORM | Prisma |
-| Authentication | NextAuth.js |
+| Auth | NextAuth.js (Credentials + JWT) |
 | Validation | Zod |
-| AI Integration | OpenAI / Claude API |
+| Testing | Playwright (Puppeteer for screenshots) |
 
 ---
 
@@ -56,8 +68,7 @@ LumeoKids helps parents track their child's growth, personalize learning paths, 
 ### Prerequisites
 
 - Node.js 18+
-- PostgreSQL 14+
-- npm or yarn
+- npm
 
 ### Installation
 
@@ -70,8 +81,7 @@ cd lumeokids
 npm install
 
 # Setup environment variables
-cp .env.example .env
-# Edit .env with your database URL and secrets
+cp .env.example .env  # or create .env manually
 
 # Run database migrations
 npx prisma migrate dev
@@ -83,10 +93,19 @@ npm run dev
 ### Environment Variables
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/lumeokids"
+DATABASE_URL="file:./dev.db"
 NEXTAUTH_SECRET="your-secret-key"
 NEXTAUTH_URL="http://localhost:3000"
 ```
+
+### Test Account
+
+Use these credentials to explore the dashboard with sample data:
+
+- **Email**: `uitest@example.com`
+- **Password**: `password123`
+
+The test account has child profiles and a completed assessment (Emma, "Creative Innovator" archetype).
 
 ---
 
@@ -95,16 +114,64 @@ NEXTAUTH_URL="http://localhost:3000"
 ```
 lumeokids/
 ├── prisma/
-│   └── schema.prisma          # Database schema
+│   ├── schema.prisma              # Database schema (User, Child, Assessment)
+│   └── migrations/
+├── screenshots/                   # App screenshots (1280×800)
+├── slides/
+│   └── pitch.md                   # 10-slide product-intro deck
 ├── src/
-│   ├── app/                   # Next.js App Router pages
-│   │   ├── (auth)/            # Login & register pages
-│   │   ├── dashboard/         # Parent dashboard
-│   │   └── api/               # API routes
-│   ├── components/            # Reusable UI components
-│   ├── lib/                   # Utilities (prisma, auth, validators)
-│   └── types/                 # TypeScript type definitions
-├── public/                    # Static assets
+│   ├── app/
+│   │   ├── layout.tsx             # Root layout (Nunito font)
+│   │   ├── page.tsx               # Landing page
+│   │   ├── globals.css            # Tailwind + animations + utilities
+│   │   ├── (auth)/
+│   │   │   ├── layout.tsx         # Split-screen auth layout
+│   │   │   ├── login/page.tsx
+│   │   │   └── register/page.tsx
+│   │   ├── dashboard/
+│   │   │   ├── layout.tsx         # Glass header + user menu
+│   │   │   ├── page.tsx           # Welcome + stats + child cards
+│   │   │   └── children/
+│   │   │       ├── new/page.tsx   # 2-step create form
+│   │   │       └── [id]/
+│   │   │           ├── page.tsx   # Profile detail + assessment CTA
+│   │   │           └── assessment/
+│   │   │               ├── page.tsx        # 11-step wizard
+│   │   │               └── results/
+│   │   │                   └── page.tsx    # Archetype results
+│   │   └── api/
+│   │       ├── auth/
+│   │       │   ├── [...nextauth]/route.ts
+│   │       │   └── register/route.ts
+│   │       ├── children/
+│   │       │   ├── route.ts
+│   │       │   └── [id]/route.ts
+│   │       └── assessments/
+│   │           └── route.ts
+│   ├── components/ui/
+│   │   ├── Button.tsx             # 5 variants, pill-shaped, gradient fills
+│   │   ├── Input.tsx              # label + error + icon + hint
+│   │   ├── Card.tsx               # default / accent / glass / interactive
+│   │   ├── Badge.tsx              # 8 color variants
+│   │   ├── EmptyState.tsx         # floating icon + CTA
+│   │   ├── LogoutButton.tsx       # gradient avatar + dropdown
+│   │   ├── FloatingBlobs.tsx      # Decorative background shapes
+│   │   └── ProgressRing.tsx       # SVG circular progress
+│   ├── lib/
+│   │   ├── prisma.ts              # Prisma singleton
+│   │   ├── auth.ts                # NextAuth config
+│   │   ├── server-auth.ts         # getSession / getCurrentUserId
+│   │   ├── validators.ts          # Zod schemas
+│   │   ├── archetypes.ts          # Sections, archetypes, scoring engine
+│   │   └── utils.ts               # calculateAge, getInitial, getTimeOfDay
+│   └── middleware.ts              # Auth guard for /dashboard/*
+├── .claude/
+│   ├── skills/db-migrate/SKILL.md
+│   └── agents/api-tester.md
+├── .mcp.json
+├── LICENSE                         # MIT
+├── CLAUDE.md                       # Session memory
+├── report.md                       # Ch-4 submission report
 └── README.md
 ```
 
@@ -113,12 +180,18 @@ lumeokids/
 ## 📊 Development Roadmap
 
 - [x] Project initialization
-- [ ] Child Profile System
-- [ ] Authentication (Parent login/register)
+- [x] Child Profile System (CRUD)
+- [x] Authentication (login/register, JWT sessions)
+- [x] Parent Dashboard (stats, child cards)
+- [x] UI/UX Design (Playful Bubbles: coral/lavender palette, floating animations, glassmorphism)
+- [x] Child Strengths Assessment (10-section wizard + 10 archetypes)
+- [x] Security Hardening (headers, input validation, middleware)
+- [x] Ch-4 Submission Prep (LICENSE, screenshots, slides, GitHub Release)
+- [ ] Deploy live URL
+- [ ] Edit & Delete Child Profiles
 - [ ] Milestone Tracking
 - [ ] Daily Activity Training
 - [ ] AI-Powered Tutor
-- [ ] Parent Dashboard
 - [ ] Gamified Learning
 - [ ] Nutrition & Health Tracking
 - [ ] Vaccination Reminders
@@ -140,7 +213,7 @@ lumeokids/
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 

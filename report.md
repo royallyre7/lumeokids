@@ -21,6 +21,7 @@
 ![screenshot 3 — register page](screenshots/03-register.png)
 ![screenshot 4 — dashboard](screenshots/04-dashboard.png)
 ![screenshot 5 — child detail](screenshots/05-child-detail.png)
+![screenshot 6 — archetype results](screenshots/06-assessment-results.png)
 
 ## Notes (optional)
 
