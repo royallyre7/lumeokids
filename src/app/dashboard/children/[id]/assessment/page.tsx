@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import ProgressRing from "@/components/ui/ProgressRing";
 import { SECTIONS, INTEREST_CLUSTERS } from "@/lib/archetypes";
+import { logError, logApiError } from "@/lib/error-logger";
 
 const TOTAL_STEPS = 11; // 10 sections + 1 interest inventory
 
@@ -98,14 +99,22 @@ export default function AssessmentPage() {
       if (!res.ok) {
         const data = await res.json();
         setFormError(data.error || "Failed to save assessment");
+        // Log the error
+        await logApiError("/api/assessments", res.status, data);
         setLoading(false);
         return;
       }
 
       router.push(`/dashboard/children/${childId}/assessment/results`);
       router.refresh();
-    } catch {
+    } catch (err) {
       setFormError("Network error. Please try again.");
+      // Log the network error
+      await logError("Network error submitting assessment", {
+        level: "error",
+        source: "client",
+        metadata: { childId, error: err instanceof Error ? err.message : "Unknown error" },
+      });
       setLoading(false);
     }
   }

@@ -51,3 +51,18 @@ model Assessment {
 
   @@index([childId])
 }
+
+model ErrorLog {
+  id        String   @id @default(uuid())
+  level     String   @default("error") // error, warn, info
+  message   String
+  source    String   @default("client") // client, api, server
+  url       String   @default("")
+  userId    String?
+  stack     String?  // Stack trace or extra details
+  metadata  String?  // JSON: additional context
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([level])
+}

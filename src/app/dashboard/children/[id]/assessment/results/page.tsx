@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import ProgressRing from "@/components/ui/ProgressRing";
+import DownloadResultsButton from "@/components/DownloadResultsButton";
 import { SECTIONS, ZONE_COLORS, ZONE_LABELS, ZONE_DESCRIPTIONS } from "@/lib/archetypes";
 import type { SectionResult, ArchetypeMatch } from "@/lib/archetypes";
 
@@ -301,7 +302,7 @@ export default async function AssessmentResultsPage({
       </div>
 
       {/* Actions */}
-      <div className="flex gap-4 mb-12">
+      <div className="flex gap-4 mb-12 flex-wrap">
         <Button href={`/dashboard/children/${params.id}`} variant="ghost">
           ← Back to Profile
         </Button>
@@ -311,6 +312,25 @@ export default async function AssessmentResultsPage({
         >
           Re-take Assessment
         </Button>
+        <DownloadResultsButton
+          childName={child.name}
+          assessmentDate={new Date(assessment.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+          overallScore={totalScore}
+          maxScore={maxTotal}
+          overallPct={overallPct}
+          sectionScores={Object.fromEntries(
+            Object.entries(sectionScores).map(([key, val]) => [
+              key,
+              { total: val.total, maxScore: val.maxScore, zone: val.zone },
+            ])
+          )}
+          interests={interests}
+          archetypes={archetypes}
+        />
       </div>
     </div>
   );

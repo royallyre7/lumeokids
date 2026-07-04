@@ -27,6 +27,13 @@ export default async function DashboardLayout({
 
           {/* User */}
           <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard/error-logs"
+              className="text-stone-400 hover:text-stone-600 transition-colors"
+              title="Error Logs"
+            >
+              📋
+            </Link>
             <div className="hidden sm:flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-coral-400 to-lavender-500 flex items-center justify-center text-white text-xs font-bold">
                 {initial}
