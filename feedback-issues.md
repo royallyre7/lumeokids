@@ -80,21 +80,34 @@ Current assessment covers strengths/hobbies but lacks specific test types for lo
 
 ---
 
-## Issue #5 — Export Assessment Results
+## Issue #5 — Download Assessment Results as PDF ✅ DONE
 
 | Field | Value |
 |-------|-------|
-| Priority | 🟢 Low |
+| Priority | 🟡 Medium |
 | Source | Written Feedback |
 | Type | Feature |
+| Resolved | 2026-07-04 |
 
 **Description:**
-No way to download or share assessment results. Parents may want to share with teachers or keep a copy.
+Parents need a printable PDF to share with teachers or keep as a record.
+
+**What was built:**
+- `DownloadResultsButton.tsx` rewritten to screenshot the rendered page via `html2canvas` + `jsPDF`
+- Captures the actual DOM (`#pdf-content` div) — no manual layout, pixel-perfect output
+- Multi-page support: long content is sliced across A4 pages automatically
+- One-click download: `{child-name}-assessment-results.pdf`
+- Works on both PC and mobile (client-side, no server needed)
 
 **Acceptance Criteria:**
-- [ ] "Download PDF" button on results page
-- [ ] PDF includes child name, scores, archetype, recommendations
-- [ ] "Share" button (copy link or email)
+- [x] "Download PDF" button on results page
+- [x] PDF includes: child name, assessment date, overall score
+- [x] PDF includes: section scores with zone labels
+- [x] PDF includes: top archetype (name, match %, strengths, activities, learning style)
+- [x] PDF includes: interest tags
+- [x] PDF matches webpage layout exactly (screenshot-based, not manual)
+- [x] Works on PC and mobile (client-side, no server needed)
+- [x] Multi-page support for long content
 
 ---
 

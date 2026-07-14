@@ -24,10 +24,30 @@
 
 ## Current Session State
 
-### Status: `PAUSED`
-- **Last worked on**: 2026-07-03 — Playful Bubbles UI Overhaul + Ch-4 Submission Prep
+### Status: `IN PROGRESS`
+- **Last worked on**: 2026-07-14 — Switched PDF generation from jsPDF to Puppeteer
 - **Branch**: `main`
-- **Last commit**: `16bc9f6` — Stop tracking ignored files
+- **Last commit**: `777e583` — feat: Ch-5 prep — error logging, download results, tech-stack deck, feedback files
+
+### Session Summary (2026-07-11)
+
+#### Ch-5 Submission Verification + PDF Download Fix
+- **Ch-5 checklist verified**: Steps 1–6 all complete (skill, subagent, AI tools, tech-stack deck, feedback files, team repo report)
+- **Git pushed**: `777e583` pushed to GitHub (Ch-5 prep commit)
+- **feedback-issues.md updated**: Issue #5 changed to "Download PDF" with detailed acceptance criteria
+- **PDF Download** — switched from jsPDF to **Puppeteer server-side rendering**:
+  - Attempt 1: `html2pdf.js` — blank pages
+  - Attempt 2: `html2canvas` + `jsPDF` — CSS rendering bugs
+  - Attempt 3: **Pure jsPDF from structured data** — worked but manual coordinate math
+  - Attempt 4: **Puppeteer** — ✅ FINAL: renders actual HTML/CSS to PDF on server
+- **Puppeteer approach**: 
+  - `src/lib/puppeteer.ts` — browser singleton (reuses Chromium across requests)
+  - `src/lib/pdf-template.ts` — self-contained HTML/CSS template (inline styles, SVG ring, zone badges)
+  - `src/app/api/children/[id]/assessment/pdf/route.ts` — POST endpoint: fetch data → render HTML → Puppeteer PDF → return blob
+  - `DownloadResultsButton.tsx` — simplified to just call API + trigger download
+  - Removed jsPDF, html2canvas, html2pdf.js from dependencies
+- **Puppeteer tested**: Full flow verified (login → results → click → PDF download → valid %PDF- header)
+- **Pending**: Run `doctor.sh ch-5`, commit changes, submit in Discord
 
 ### Session Summary (2026-07-03)
 
@@ -130,6 +150,11 @@ lumeokids/
 │   │       │   └── [id]/route.ts
 │   │       └── assessments/
 │   │           └── route.ts         # POST + GET assessment
+│   │       └── children/
+│   │           └── [id]/
+│   │               └── assessment/
+│   │                   └── pdf/
+│   │                       └── route.ts  # POST — Puppeteer PDF generation
 │   ├── components/ui/
 │   │   ├── Button.tsx              # 5 variants (primary/secondary/outline/ghost/lavender), pill-shaped, gradient fills
 │   │   ├── Input.tsx               # label + error + icon + hint, ARIA support
@@ -145,7 +170,9 @@ lumeokids/
 │   │   ├── server-auth.ts          # getSession / getCurrentUserId
 │   │   ├── validators.ts           # Zod schemas (register, login, child, assessment)
 │   │   ├── archetypes.ts           # 10 sections, 10 archetypes, scoring engine
-│   │   └── utils.ts                # calculateAge, getInitial, getTimeOfDay
+│   │   ├── utils.ts                # calculateAge, getInitial, getTimeOfDay
+│   │   ├── puppeteer.ts            # Browser singleton for PDF generation
+│   │   └── pdf-template.ts         # Self-contained HTML/CSS template for results PDF
 │   └── middleware.ts               # Auth guard for /dashboard/*
 ├── screenshots/                    # 6 screenshots at 1280×800
 │   ├── 01-landing.png
@@ -166,11 +193,11 @@ lumeokids/
 ```
 
 ### Next Step
-> **Priority: Push to remote + Ch-4 team repo submission.** 
-> - Push latest commit to GitHub (if not already done)
-> - Clone team repo (`team-NN`), copy `report.md` → `ch-4/<username>/report.md`
-> - Open PR in team repo
-> - Run `doctor.sh ch-4` to verify
+> **Priority: Ch-5 submission (today's work not yet committed).**
+> - Run `bash doctor.sh ch-5` to verify all green
+> - Commit today's changes (PDF download fix, feedback-issues update)
+> - Push to GitHub
+> - Post in Discord `#ch-5` channel
 > - **Then**: Edit & Delete Child Profiles — Add `PUT`/`DELETE` routes + UI (edit button on detail page, delete with confirmation). Then proceed to **Milestone Tracking** module.
 
 ### Known Issues / Gotchas
@@ -183,6 +210,8 @@ lumeokids/
 - **Screenshots**: 6 PNGs in `screenshots/` — regenerate via Puppeteer if UI changes significantly
 - **GitHub Release**: v1.0.0 requires manual `tar` + `gh release create` to update archive after changes
 - **Test child**: `child-test-001` (Emma) has completed assessment data for archetype results demo
+- **PDF Download**: `DownloadResultsButton.tsx` calls `POST /api/children/[id]/assessment/pdf` which uses Puppeteer to render HTML/CSS to PDF. The HTML template is in `src/lib/pdf-template.ts` (self-contained, inline CSS). Puppeteer browser is a singleton in `src/lib/puppeteer.ts`. If adding new PDF content, edit the template — the button just triggers the API call.
+- **Puppeteer**: Local Chromium, `--no-sandbox --disable-setuid-sandbox` args. `page.setContent()` uses `waitUntil: "domcontentloaded"` (not `networkidle0`). `page.pdf()` returns `Uint8Array` — convert to `Buffer` before passing to `NextResponse`.
 
 ---
 

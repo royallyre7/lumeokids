@@ -1,81 +1,51 @@
 "use client";
 
-import Button from "@/components/ui/Button";
+import { useState, useCallback } from "react";
+import { useParams } from "next/navigation";
 
-interface DownloadResultsButtonProps {
-  childName: string;
-  assessmentDate: string;
-  overallScore: number;
-  maxScore: number;
-  overallPct: number;
-  sectionScores: Record<string, { total: number; maxScore: number; zone: string }>;
-  interests: string[];
-  archetypes: Array<{
-    name: string;
-    emoji: string;
-    tagline: string;
-    matchStrength: number;
-    description: string;
-    coreStrengths: string[];
-    recommendedActivities: string[];
-    learningStyle: string;
-    supportGuidance: string;
-  }>;
-}
+export default function DownloadResultsButton() {
+  const [busy, setBusy] = useState(false);
+  const params = useParams();
+  const childId = params.id as string;
 
-export default function DownloadResultsButton({
-  childName,
-  assessmentDate,
-  overallScore,
-  maxScore,
-  overallPct,
-  sectionScores,
-  interests,
-  archetypes,
-}: DownloadResultsButtonProps) {
-  const handleDownload = () => {
-    const results = {
-      child: childName,
-      assessmentDate,
-      overallScore: `${overallScore}/${maxScore}`,
-      overallPercentage: `${overallPct}%`,
-      sectionScores,
-      interests,
-      topArchetype: archetypes[0]
-        ? {
-            name: archetypes[0].name,
-            emoji: archetypes[0].emoji,
-            matchStrength: `${archetypes[0].matchStrength}%`,
-            description: archetypes[0].description,
-            coreStrengths: archetypes[0].coreStrengths,
-            recommendedActivities: archetypes[0].recommendedActivities,
-            learningStyle: archetypes[0].learningStyle,
-            supportGuidance: archetypes[0].supportGuidance,
-          }
-        : null,
-      allArchetypes: archetypes.map((a) => ({
-        name: a.name,
-        emoji: a.emoji,
-        matchStrength: `${a.matchStrength}%`,
-      })),
-    };
+  const handleClick = useCallback(async () => {
+    setBusy(true);
 
-    const blob = new Blob([JSON.stringify(results, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${childName.replace(/\s+/g, "-")}-assessment-results.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+    try {
+      const res = await fetch(
+        `/api/children/${childId}/assessment/pdf`,
+        { method: "POST" }
+      );
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `HTTP ${res.status}`);
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `${childId}-assessment-results.pdf`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch (err: any) {
+      console.error("[PDF] Download failed:", err);
+      window.alert("PDF download failed: " + (err.message || err));
+    } finally {
+      setBusy(false);
+    }
+  }, [childId]);
 
   return (
-    <Button onClick={handleDownload} variant="secondary">
-      📥 Download Results
-    </Button>
+    <button
+      onClick={handleClick}
+      disabled={busy}
+      className="inline-flex items-center justify-center font-bold transition-all duration-200 bg-gradient-to-r from-sky-500 to-sky-600 text-white shadow-sm hover:from-sky-600 hover:to-sky-700 px-6 py-2.5 text-sm rounded-full gap-2 disabled:opacity-40 disabled:pointer-events-none active:scale-95"
+    >
+      {busy ? "⏳ Generating PDF..." : "📄 Download PDF"}
+    </button>
   );
 }

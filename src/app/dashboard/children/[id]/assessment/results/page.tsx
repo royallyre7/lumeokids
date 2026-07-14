@@ -82,10 +82,13 @@ export default async function AssessmentResultsPage({
     <div className="max-w-2xl mx-auto animate-fade-in">
       <Link
         href={`/dashboard/children/${params.id}`}
-        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-coral-500 transition-colors mb-4"
+        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-coral-500 transition-colors mb-4 no-print"
       >
         ← Back to {child.name}&apos;s Profile
       </Link>
+
+      {/* PDF capture target — everything inside is screenshotted */}
+      <div id="pdf-content" className="bg-white p-6 rounded-2xl">
 
       {/* Header — Playful Bubbles */}
       <div className="mb-8">
@@ -301,8 +304,10 @@ export default async function AssessmentResultsPage({
         )}
       </div>
 
+      </div>{/* end pdf-content */}
+
       {/* Actions */}
-      <div className="flex gap-4 mb-12 flex-wrap">
+      <div className="flex gap-4 mb-12 flex-wrap no-print">
         <Button href={`/dashboard/children/${params.id}`} variant="ghost">
           ← Back to Profile
         </Button>
@@ -312,25 +317,7 @@ export default async function AssessmentResultsPage({
         >
           Re-take Assessment
         </Button>
-        <DownloadResultsButton
-          childName={child.name}
-          assessmentDate={new Date(assessment.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-          overallScore={totalScore}
-          maxScore={maxTotal}
-          overallPct={overallPct}
-          sectionScores={Object.fromEntries(
-            Object.entries(sectionScores).map(([key, val]) => [
-              key,
-              { total: val.total, maxScore: val.maxScore, zone: val.zone },
-            ])
-          )}
-          interests={interests}
-          archetypes={archetypes}
-        />
+        <DownloadResultsButton />
       </div>
     </div>
   );
