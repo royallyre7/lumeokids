@@ -25,9 +25,29 @@
 ## Current Session State
 
 ### Status: `IN PROGRESS`
-- **Last worked on**: 2026-07-14 — Switched PDF generation from jsPDF to Puppeteer
+- **Last worked on**: 2026-07-14 — Integrated assessment method modules + Puppeteer PDF
 - **Branch**: `main`
-- **Last commit**: `777e583` — feat: Ch-5 prep — error logging, download results, tech-stack deck, feedback files
+- **Last commit**: `1bdc7ef` — docs: add assessment method spec and integrated results screenshot
+
+### Session Summary (2026-07-14)
+
+#### Assessment Method Integration + Chrome DevTools Testing
+- **Puppeteer PDF**: Switched from jsPDF to server-side Puppeteer rendering
+  - `src/lib/puppeteer.ts` — browser singleton
+  - `src/lib/pdf-template.ts` — self-contained HTML/CSS template
+  - `src/app/api/children/[id]/assessment/pdf/route.ts` — POST endpoint
+  - `DownloadResultsButton.tsx` — simplified to API call
+  - Removed jspdf, html2canvas, html2pdf.js
+- **New modules from copilotupdatemethod.md** — all 5 integrated:
+  - `src/lib/domainMapping.ts` — maps A→J to scientific frameworks (Gardner, Duckworth, Goleman, etc.)
+  - `src/lib/methods.ts` — 9 theoretical methods (SDT, Grit, MI, EQ, EF, SEL, Temperament, Divergent, Constructivist)
+  - `src/lib/zonesPro.ts` — professional zone descriptions with parent + educator guidance
+  - `src/lib/growth.ts` — growth trend engine (up/down/stable across multiple assessments)
+  - `src/components/reports/ParentReport.tsx` — professional report component
+- **Results page integrated** — shows domain frameworks, parent guidance, growth indicators (↑ ↓ →), assessment count
+- **PDF updated** — includes framework labels + "Parent Guidance by Domain" section
+- **Chrome DevTools test** — 31/31 CDP tests passed (Network, Console, Performance, DOM, PDF download)
+- **Puppeteer E2E test** — login → results → download → valid PDF verified
 
 ### Session Summary (2026-07-11)
 
@@ -163,7 +183,9 @@ lumeokids/
 │   │   ├── EmptyState.tsx          # floating icon + decorative blobs + CTA
 │   │   ├── LogoutButton.tsx        # gradient avatar + popIn dropdown
 │   │   ├── FloatingBlobs.tsx       # Decorative floating blob shapes (Playful Bubbles)
-│   │   └── ProgressRing.tsx        # SVG circular progress with 5 color options
+│   │   ├── ProgressRing.tsx        # SVG circular progress with 5 color options
+│   │   └── reports/
+│   │       └── ParentReport.tsx    # Professional report with domain frameworks + zone guidance
 │   ├── lib/
 │   │   ├── prisma.ts               # Prisma singleton
 │   │   ├── auth.ts                 # NextAuth config
@@ -172,7 +194,11 @@ lumeokids/
 │   │   ├── archetypes.ts           # 10 sections, 10 archetypes, scoring engine
 │   │   ├── utils.ts                # calculateAge, getInitial, getTimeOfDay
 │   │   ├── puppeteer.ts            # Browser singleton for PDF generation
-│   │   └── pdf-template.ts         # Self-contained HTML/CSS template for results PDF
+│   │   ├── pdf-template.ts         # Self-contained HTML/CSS template for results PDF
+│   │   ├── domainMapping.ts        # Scientific framework mapping (A→J → Gardner, Duckworth, etc.)
+│   │   ├── methods.ts              # 9 theoretical methods metadata
+│   │   ├── zonesPro.ts             # Professional zone descriptions + parent/educator guidance
+│   │   └── growth.ts               # Growth trend engine across multiple assessments
 │   └── middleware.ts               # Auth guard for /dashboard/*
 ├── screenshots/                    # 6 screenshots at 1280×800
 │   ├── 01-landing.png
