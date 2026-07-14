@@ -5,6 +5,9 @@ interface SectionScore {
   total: number;
   maxScore: number;
   zone: string;
+  framework?: string;
+  professor?: string;
+  parentGuidance?: string;
 }
 
 interface ArchetypeData {
@@ -85,7 +88,8 @@ export function buildResultsHTML(data: PdfData): string {
             <span style="background:${bg};color:${fg};padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;">${label}</span>
           </td>
           <td style="padding:6px 8px;text-align:right;color:#64748b;font-size:13px;">${pct}%</td>
-        </tr>`;
+        </tr>
+        ${s.framework ? `<tr><td colspan="4" style="padding:0 8px 6px 8px;font-size:9px;color:#94a3b8;">${s.framework} — ${s.professor || ""}</td></tr>` : ""}`;
     })
     .join("");
 
@@ -257,6 +261,23 @@ export function buildResultsHTML(data: PdfData): string {
         ${sectionRows}
       </tbody>
     </table>
+  </div>
+
+  <!-- PARENT GUIDANCE -->
+  <div class="page-break"></div>
+  <div style="margin-bottom:20px;">
+    <h2 style="font-size:16px;font-weight:800;color:#334155;margin-bottom:8px;">💡 Parent Guidance by Domain</h2>
+    <div style="border-bottom:1px solid #e2e8f0;margin-bottom:10px;"></div>
+    ${sectionScores
+      .filter((s) => s.parentGuidance)
+      .map(
+        (s) => `
+      <div style="background:#f8fafc;border-radius:10px;padding:10px 14px;margin-bottom:8px;border-left:3px solid ${ZONE_FG[s.zone] || "#94a3b8"};">
+        <div style="font-size:12px;font-weight:700;color:#334155;margin-bottom:3px;">${s.emoji} ${s.key} — ${s.label}</div>
+        <div style="font-size:10px;color:#475569;line-height:1.5;">${s.parentGuidance}</div>
+      </div>`
+      )
+      .join("")}
   </div>
 
   <!-- INTEREST TAGS -->

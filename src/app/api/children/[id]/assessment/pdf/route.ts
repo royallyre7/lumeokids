@@ -5,6 +5,8 @@ import { getBrowser } from "@/lib/puppeteer";
 import { buildResultsHTML } from "@/lib/pdf-template";
 import { SECTIONS } from "@/lib/archetypes";
 import type { SectionResult, ArchetypeMatch } from "@/lib/archetypes";
+import { DOMAIN_MAP } from "@/lib/domainMapping";
+import { ZONES_PRO } from "@/lib/zonesPro";
 
 export async function POST(
   _req: Request,
@@ -61,14 +63,21 @@ export async function POST(
       overallScore: totalScore,
       maxScore: maxTotal,
       overallPct,
-      sectionScores: SECTIONS.filter((s) => sectionScores[s.key]).map((s) => ({
-        key: s.key,
-        label: s.label,
-        emoji: s.emoji,
-        total: sectionScores[s.key].total,
-        maxScore: sectionScores[s.key].maxScore,
-        zone: sectionScores[s.key].zone,
-      })),
+      sectionScores: SECTIONS.filter((s) => sectionScores[s.key]).map((s) => {
+        const domain = DOMAIN_MAP[s.key];
+        const zoneMeta = ZONES_PRO[sectionScores[s.key].zone];
+        return {
+          key: s.key,
+          label: s.label,
+          emoji: s.emoji,
+          total: sectionScores[s.key].total,
+          maxScore: sectionScores[s.key].maxScore,
+          zone: sectionScores[s.key].zone,
+          framework: domain?.framework,
+          professor: domain?.professor,
+          parentGuidance: zoneMeta?.parentGuidance,
+        };
+      }),
       interests,
       archetypes: archetypes.map((a) => ({
         name: a.name,

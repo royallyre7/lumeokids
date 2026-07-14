@@ -7,8 +7,12 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import ProgressRing from "@/components/ui/ProgressRing";
 import DownloadResultsButton from "@/components/DownloadResultsButton";
-import { SECTIONS, ZONE_COLORS, ZONE_LABELS, ZONE_DESCRIPTIONS } from "@/lib/archetypes";
+import { SECTIONS } from "@/lib/archetypes";
 import type { SectionResult, ArchetypeMatch } from "@/lib/archetypes";
+import { DOMAIN_MAP } from "@/lib/domainMapping";
+import { ZONES_PRO } from "@/lib/zonesPro";
+import { computeGrowthTrend } from "@/lib/growth";
+import type { HistoricalSectionResult } from "@/lib/growth";
 
 export default async function AssessmentResultsPage({
   params,
@@ -78,6 +82,39 @@ export default async function AssessmentResultsPage({
   const maxTotal = Object.values(sectionScores).reduce((sum, s) => sum + s.maxScore, 0);
   const overallPct = Math.round((totalScore / maxTotal) * 100);
 
+  // ─── GROWTH TRACKING ───
+  // Fetch all past assessments for this child to compute growth trends
+  const allAssessments = await prisma.assessment.findMany({
+    where: { childId: params.id },
+    orderBy: { createdAt: "asc" },
+  });
+
+  // Build growth history per section
+  const growthHistory: Record<string, HistoricalSectionResult[]> = {};
+  SECTIONS.forEach((s) => {
+    growthHistory[s.key] = [];
+  });
+
+  allAssessments.forEach((a) => {
+    const scores = JSON.parse(a.sectionScores) as Record<string, SectionResult>;
+    SECTIONS.forEach((s) => {
+      const result = scores[s.key];
+      if (result) {
+        growthHistory[s.key].push({
+          ...result,
+          date: a.createdAt.toISOString(),
+        });
+      }
+    });
+  });
+
+  const growthTrends = SECTIONS.map((s) => ({
+    key: s.key,
+    trend: computeGrowthTrend(growthHistory[s.key]),
+  }));
+
+  const hasGrowthData = allAssessments.length > 1;
+
   return (
     <div className="max-w-2xl mx-auto animate-fade-in">
       <Link
@@ -102,6 +139,11 @@ export default async function AssessmentResultsPage({
             month: "long",
             day: "numeric",
           })}
+          {hasGrowthData && (
+            <span className="ml-2 text-lavender-500 font-medium">
+              · {allAssessments.length} assessments taken
+            </span>
+          )}
         </p>
       </div>
 
@@ -127,7 +169,7 @@ export default async function AssessmentResultsPage({
         </div>
       </Card>
 
-      {/* Section Score Bars — Playful Bubbles */}
+      {/* Section Score Bars — Playful Bubbles + Domain Frameworks */}
       <Card className="mb-6">
         <h2 className="text-lg font-bold text-stone-700 mb-4">📊 Section Scores</h2>
         <div className="space-y-4">
@@ -135,16 +177,41 @@ export default async function AssessmentResultsPage({
             const result = sectionScores[section.key];
             if (!result) return null;
             const pct = (result.total / result.maxScore) * 100;
+            const domain = DOMAIN_MAP[section.key];
+            const zoneMeta = ZONES_PRO[result.zone];
+            const growth = growthTrends.find((g) => g.key === section.key);
 
             return (
               <div key={section.key}>
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-sm font-medium text-stone-600">
-                    {section.emoji} {section.key} — {section.label}
-                  </span>
-                  <span className="text-sm font-bold text-stone-700">
-                    {result.total}/{result.maxScore}
-                  </span>
+                  <div className="flex-1">
+                    <span className="text-sm font-medium text-stone-600">
+                      {section.emoji} {section.key} — {section.label}
+                    </span>
+                    {/* Domain framework */}
+                    {domain && (
+                      <p className="text-[10px] text-stone-400 mt-0.5">
+                        {domain.framework} — {domain.professor}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {/* Growth indicator */}
+                    {growth && hasGrowthData && (
+                      <span className={`text-xs font-bold ${
+                        growth.trend.direction === "up" ? "text-mint-500" :
+                        growth.trend.direction === "down" ? "text-coral-400" :
+                        "text-stone-400"
+                      }`}>
+                        {growth.trend.direction === "up" && `↑ +${growth.trend.delta}`}
+                        {growth.trend.direction === "down" && `↓ ${growth.trend.delta}`}
+                        {growth.trend.direction === "stable" && "→ 0"}
+                      </span>
+                    )}
+                    <span className="text-sm font-bold text-stone-700">
+                      {result.total}/{result.maxScore}
+                    </span>
+                  </div>
                 </div>
                 <div className="w-full h-3 bg-stone-100 rounded-full overflow-hidden">
                   <div
@@ -154,10 +221,10 @@ export default async function AssessmentResultsPage({
                 </div>
                 <div className="flex justify-between mt-1">
                   <span className="text-xs font-medium text-stone-400">
-                    {ZONE_LABELS[result.zone]}
+                    {zoneMeta?.label || result.zone}
                   </span>
                   <span className="text-xs text-stone-400">
-                    {ZONE_DESCRIPTIONS[result.zone]}
+                    {zoneMeta?.description?.substring(0, 60)}...
                   </span>
                 </div>
               </div>
@@ -184,6 +251,46 @@ export default async function AssessmentResultsPage({
           </div>
         </Card>
       )}
+
+      {/* Parent Guidance — ZONES_PRO */}
+      <Card className="mb-6">
+        <h2 className="text-lg font-bold text-stone-700 mb-4">
+          💡 Parent Guidance by Domain
+        </h2>
+        <div className="space-y-3">
+          {SECTIONS.map((section) => {
+            const result = sectionScores[section.key];
+            if (!result) return null;
+            const zoneMeta = ZONES_PRO[result.zone];
+            if (!zoneMeta) return null;
+
+            return (
+              <div
+                key={section.key}
+                className="p-3 bg-gradient-to-r from-stone-50 to-white rounded-xl border border-stone-100"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span>{section.emoji}</span>
+                  <span className="text-sm font-semibold text-stone-700">
+                    {section.key} — {section.label}
+                  </span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    result.zone === "Outstanding" ? "bg-mint-100 text-mint-700" :
+                    result.zone === "Strong" ? "bg-sky-100 text-sky-700" :
+                    result.zone === "Emerging" ? "bg-sunny-100 text-sunny-700" :
+                    "bg-coral-100 text-coral-700"
+                  }`}>
+                    {result.zone}
+                  </span>
+                </div>
+                <p className="text-xs text-stone-600 ml-7">
+                  {zoneMeta.parentGuidance}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
 
       {/* Archetype Matches — Playful Bubbles */}
       <div className="mb-6">
@@ -303,6 +410,15 @@ export default async function AssessmentResultsPage({
           </div>
         )}
       </div>
+
+      {/* Disclaimer */}
+      <Card className="mb-6 border-lavender-200">
+        <p className="text-xs text-stone-500 leading-relaxed">
+          <strong>📋 Note:</strong> This assessment is non-clinical and strength-based.
+          It is intended to guide supportive parenting and teaching, not to diagnose or limit {child.name}.
+          Re-assessment over time can show growth and changing patterns.
+        </p>
+      </Card>
 
       </div>{/* end pdf-content */}
 
