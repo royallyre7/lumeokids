@@ -181,13 +181,8 @@ lumeokids/
 
 - [x] Project initialization
 - [x] Child Profile System (CRUD)
-- [x] Authentication (login/register, JWT sessions)
 - [x] Parent Dashboard (stats, child cards)
-- [x] UI/UX Design (Playful Bubbles: coral/lavender palette, floating animations, glassmorphism)
 - [x] Child Strengths Assessment (10-section wizard + 10 archetypes)
-- [x] Security Hardening (headers, input validation, middleware)
-- [x] Ch-4 Submission Prep (LICENSE, screenshots, slides, GitHub Release)
-- [ ] Deploy live URL
 - [ ] Edit & Delete Child Profiles
 - [ ] Milestone Tracking
 - [ ] Daily Activity Training
