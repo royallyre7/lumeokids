@@ -35,7 +35,7 @@ export default async function DashboardLayout({
               📋
             </Link>
             <div className="hidden sm:flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-coral-400 to-lavender-500 flex items-center justify-center text-white text-xs font-bold">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-lavender-500 flex items-center justify-center text-white text-xs font-bold">
                 {initial}
               </div>
               <span className="text-sm text-stone-600 font-medium">

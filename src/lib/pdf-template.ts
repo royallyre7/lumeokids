@@ -49,9 +49,9 @@ const ZONE_BG: Record<string, string> = {
 
 const ZONE_FG: Record<string, string> = {
   Outstanding: "#059669",
-  Strong: "#0284c7",
+  Strong: "#0ea5e9",
   Emerging: "#d97706",
-  Support: "#e11d48",
+  Support: "#ec4899",
 };
 
 export function buildResultsHTML(data: PdfData): string {
@@ -98,15 +98,15 @@ export function buildResultsHTML(data: PdfData): string {
     .map((arch, i) => {
       const isPrimary = i === 0;
       const cardBg = isPrimary ? "#fdf2f8" : "#f0f9ff";
-      const accentColor = isPrimary ? "#f43f5e" : "#0ea5e9";
+      const accentColor = isPrimary ? "#ec4899" : "#0ea5e9";
       const barBg = isPrimary
-        ? "linear-gradient(90deg, #f43f5e, #a855f7, #0ea5e9)"
+        ? "linear-gradient(90deg, #ec4899, #a855f7, #0ea5e9)"
         : "linear-gradient(90deg, #0ea5e9, #a855f7)";
 
       const strengthsList = arch.coreStrengths
         .map(
           (s) =>
-            `<li style="margin-bottom:4px;font-size:12px;color:#334155;"><span style="color:${isPrimary ? "#f43f5e" : "#0ea5e9"};margin-right:6px;">✦</span>${s}</li>`
+            `<li style="margin-bottom:4px;font-size:12px;color:#334155;"><span style="color:${isPrimary ? "#ec4899" : "#0ea5e9"};margin-right:6px;">✦</span>${s}</li>`
         )
         .join("");
 
@@ -127,7 +127,7 @@ export function buildResultsHTML(data: PdfData): string {
             <div>
               <div style="display:flex;align-items:center;gap:8px;">
                 <span style="font-size:16px;font-weight:800;color:#1e293b;">${arch.name}</span>
-                ${isPrimary ? `<span style="background:#fef2f2;color:#e11d48;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">⭐ Best Match</span>` : ""}
+                ${isPrimary ? `<span style="background:#fef2f2;color:#ec4899;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">⭐ Best Match</span>` : ""}
               </div>
               <div style="font-size:12px;color:#64748b;font-style:italic;">&ldquo;${arch.tagline}&rdquo; — ${arch.matchStrength}% match</div>
             </div>
@@ -155,13 +155,13 @@ export function buildResultsHTML(data: PdfData): string {
 
           <!-- Learning Style -->
           <div style="background:linear-gradient(90deg, #f0f9ff, #f5f3ff);border-radius:12px;padding:12px;margin-bottom:8px;">
-            <h4 style="font-size:10px;font-weight:700;color:#0284c7;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 4px 0;">📖 How They Learn Best</h4>
+            <h4 style="font-size:10px;font-weight:700;color:#0ea5e9;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 4px 0;">📖 How They Learn Best</h4>
             <p style="font-size:12px;color:#334155;margin:0;line-height:1.5;">${arch.learningStyle}</p>
           </div>
 
           <!-- Support Guidance -->
           <div style="background:linear-gradient(90deg, #fff7ed, #fefce8);border-radius:12px;padding:12px;">
-            <h4 style="font-size:10px;font-weight:700;color:#e11d48;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 4px 0;">💡 What They May Need Support With</h4>
+            <h4 style="font-size:10px;font-weight:700;color:#ec4899;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 4px 0;">💡 What They May Need Support With</h4>
             <p style="font-size:12px;color:#334155;margin:0;line-height:1.5;">${arch.supportGuidance}</p>
           </div>
         </div>`;
@@ -172,7 +172,7 @@ export function buildResultsHTML(data: PdfData): string {
   const interestTags = interests
     .map(
       (item) =>
-        `<span style="background:#ede9fe;color:#7c3aed;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;display:inline-block;margin:3px 4px 3px 0;">${item}</span>`
+        `<span style="background:#ede9fe;color:#9333ea;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;display:inline-block;margin:3px 4px 3px 0;">${item}</span>`
     )
     .join("");
 
@@ -206,7 +206,7 @@ export function buildResultsHTML(data: PdfData): string {
 </head>
 <body>
   <!-- HEADER -->
-  <div style="background:linear-gradient(135deg, #ec4899, #f43f5e);border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+  <div style="background:linear-gradient(135deg, #ec4899, #ec4899);border-radius:12px;padding:20px 24px;margin-bottom:20px;">
     <h1 style="color:#fff;font-size:22px;font-weight:800;text-align:center;margin-bottom:4px;">LumeoKids Assessment Results</h1>
     <p style="color:rgba(255,255,255,0.85);font-size:12px;text-align:center;">Strengths &amp; Learning Archetype Report</p>
   </div>
@@ -223,7 +223,7 @@ export function buildResultsHTML(data: PdfData): string {
     </div>
     <div style="text-align:right;">
       <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;">Score</div>
-      <div style="font-size:16px;font-weight:800;color:#e11d48;">${overallScore}/${maxScore} (${overallPct}%)</div>
+      <div style="font-size:16px;font-weight:800;color:#ec4899;">${overallScore}/${maxScore} (${overallPct}%)</div>
     </div>
   </div>
 
@@ -232,12 +232,12 @@ export function buildResultsHTML(data: PdfData): string {
     <div style="display:inline-block;position:relative;width:90px;height:90px;margin-bottom:8px;">
       <svg width="90" height="90" viewBox="0 0 90 90">
         <circle cx="45" cy="45" r="38" fill="none" stroke="#e2e8f0" stroke-width="7"/>
-        <circle cx="45" cy="45" r="38" fill="none" stroke="#f43f5e" stroke-width="7"
+        <circle cx="45" cy="45" r="38" fill="none" stroke="#ec4899" stroke-width="7"
           stroke-dasharray="${(overallPct / 100) * 238.76} 238.76"
           stroke-linecap="round"
           transform="rotate(-90 45 45)"/>
       </svg>
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:20px;font-weight:800;color:#e11d48;">${overallPct}%</div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:20px;font-weight:800;color:#ec4899;">${overallPct}%</div>
     </div>
     <div style="font-size:16px;font-weight:700;color:#334155;">Overall Score</div>
     <div style="font-size:28px;font-weight:800;color:#1e293b;">${overallScore} <span style="font-size:16px;color:#94a3b8;font-weight:400;">/ ${maxScore}</span></div>

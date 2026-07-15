@@ -9,13 +9,14 @@ interface CardProps {
   className?: string;
   hover?: boolean;
   variant?: CardVariant;
-  accentColor?: "coral" | "sky" | "lavender" | "mint" | "sunny";
+  accentColor?: "primary" | "accent" | "coral" | "lavender" | "mint" | "sunny";
   onClick?: () => void;
 }
 
 const accentColors: Record<string, string> = {
+  primary: "from-primary-400 to-primary-500",
+  accent: "from-accent-400 to-accent-500",
   coral: "from-coral-400 to-coral-500",
-  sky: "from-sky-400 to-sky-500",
   lavender: "from-lavender-400 to-lavender-500",
   mint: "from-mint-400 to-mint-500",
   sunny: "from-sunny-400 to-sunny-500",
@@ -33,7 +34,7 @@ export default function Card({
   const variantClasses: Record<CardVariant, string> = {
     default: "card p-6",
     accent: "card-accent p-6",
-    glass: "glass rounded-3xl p-6 shadow-card",
+    glass: "glass rounded-clay-lg p-6 shadow-clay",
     interactive: "card-hoverable p-6 cursor-pointer",
   };
 

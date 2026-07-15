@@ -23,13 +23,13 @@ const iconMap: Record<string, string> = {
   Weaknesses: "🎯",
 };
 
-const accentMap: Record<string, "coral" | "sky" | "lavender" | "mint" | "sunny"> = {
-  Age: "coral",
-  "Date of Birth": "sky",
+const accentMap: Record<string, "primary" | "accent" | "coral" | "lavender" | "mint" | "sunny"> = {
+  Age: "primary",
+  "Date of Birth": "accent",
   "Learning Level": "lavender",
   Interests: "sunny",
   Strengths: "mint",
-  Weaknesses: "coral",
+  Weaknesses: "primary",
 };
 
 export default async function ChildDetailPage({
@@ -65,7 +65,7 @@ export default async function ChildDetailPage({
       {/* Profile Header — Playful Bubbles */}
       <div className="card overflow-hidden">
         {/* Color bar + avatar */}
-        <div className="bg-gradient-to-r from-coral-400 via-lavender-400 to-sky-400 h-28 relative">
+        <div className="bg-gradient-to-r from-coral-400 via-lavender-400 to-accent-400 h-28 relative">
           {/* Floating decorations */}
           <div className="absolute top-4 right-6 text-2xl animate-float opacity-60" aria-hidden="true">⭐</div>
           <div className="absolute top-6 right-20 text-xl animate-float-slow opacity-40" aria-hidden="true">✨</div>
@@ -164,11 +164,11 @@ export default async function ChildDetailPage({
 function InfoCard({
   label,
   value,
-  accent = "coral",
+  accent = "primary",
 }: {
   label: string;
   value: string;
-  accent?: "coral" | "sky" | "lavender" | "mint" | "sunny";
+  accent?: "primary" | "accent" | "coral" | "lavender" | "mint" | "sunny";
 }) {
   const icon = iconMap[label] || "📋";
   return (

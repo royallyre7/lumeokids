@@ -15,15 +15,15 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-gradient-to-r from-coral-500 to-coral-600 text-white shadow-bubble hover:from-coral-600 hover:to-coral-700 hover:shadow-bubble-lg",
+    "bg-gradient-to-r from-primary-400 to-primary-500 text-white shadow-clay hover:from-primary-500 hover:to-primary-600 hover:shadow-clay-hover",
   secondary:
-    "bg-gradient-to-r from-sky-500 to-sky-600 text-white shadow-sm hover:from-sky-600 hover:to-sky-700",
+    "bg-gradient-to-r from-accent-400 to-accent-500 text-white shadow-clay hover:from-accent-500 hover:to-accent-600 hover:shadow-clay-hover",
   outline:
-    "border-2 border-stone-200 text-stone-700 bg-white hover:border-coral-300 hover:text-coral-600 hover:bg-coral-50/50",
+    "border-2 border-primary-200 text-primary-700 bg-white hover:border-primary-400 hover:bg-primary-50/50 shadow-sm hover:shadow-clay",
   ghost:
-    "text-stone-600 hover:bg-stone-100 hover:text-stone-800",
+    "text-stone-600 hover:bg-primary-50 hover:text-primary-700",
   lavender:
-    "bg-gradient-to-r from-lavender-500 to-lavender-600 text-white shadow-sm hover:from-lavender-600 hover:to-lavender-700 hover:shadow-glow-lavender",
+    "bg-gradient-to-r from-lavender-400 to-lavender-500 text-white shadow-clay hover:from-lavender-500 hover:to-lavender-600 hover:shadow-glow-lavender",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -44,7 +44,7 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-bold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coral-400 disabled:opacity-40 disabled:pointer-events-none active:scale-95";
+    "inline-flex items-center justify-center font-bold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400 disabled:opacity-40 disabled:pointer-events-none active:scale-95";
 
   const classes = `${base} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
 

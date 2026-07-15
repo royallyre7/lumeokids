@@ -8,14 +8,14 @@ const features = [
     title: "Personalized Learning",
     description:
       "Every child learns differently. Profiles adapt to age, interests, and skill level.",
-    color: "coral" as const,
+    color: "primary" as const,
   },
   {
     icon: "📊",
     title: "Growth Tracking",
     description:
       "Monitor cognitive, motor, emotional, and language milestones as your child grows.",
-    color: "sky" as const,
+    color: "accent" as const,
   },
   {
     icon: "🎮",
@@ -43,21 +43,23 @@ const features = [
     title: "Family Bonding",
     description:
       "Parent-child activities, weekend challenges, and creative projects together.",
-    color: "coral" as const,
+    color: "primary" as const,
   },
 ];
 
 const colorAccent: Record<string, string> = {
+  primary: "from-primary-400 to-primary-500",
+  accent: "from-accent-400 to-accent-500",
   coral: "from-coral-400 to-coral-500",
-  sky: "from-sky-400 to-sky-500",
   lavender: "from-lavender-400 to-lavender-500",
   mint: "from-mint-400 to-mint-500",
   sunny: "from-sunny-400 to-sunny-500",
 };
 
 const colorBg: Record<string, string> = {
+  primary: "bg-primary-50",
+  accent: "bg-accent-50",
   coral: "bg-coral-50",
-  sky: "bg-sky-50",
   lavender: "bg-lavender-50",
   mint: "bg-mint-50",
   sunny: "bg-sunny-50",
@@ -137,7 +139,7 @@ export default function LandingPage() {
       </section>
 
       {/* === Stats banner === */}
-      <section className="bg-gradient-to-r from-coral-500 to-lavender-500 py-12">
+      <section className="bg-gradient-to-r from-primary-500 to-lavender-500 py-12">
         <div className="page-container">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center text-white stagger-children">
             <div>

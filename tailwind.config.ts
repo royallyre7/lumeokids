@@ -9,14 +9,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Warm kid-friendly palette — Playful Bubbles
+        // Soft pastel vibrant palette — Child Development Psychology
+        primary: {
+          50: "#fdf2f8",
+          100: "#fce7f3",
+          200: "#fbcfe8",
+          300: "#f9a8d4",
+          400: "#f472b6",
+          500: "#ec4899", // Nurturing pink
+          600: "#db2777",
+          700: "#be185d",
+          800: "#9d174d",
+          900: "#831843",
+        },
+        accent: {
+          50: "#f0f9ff",
+          100: "#e0f2fe",
+          200: "#bae6fd",
+          300: "#7dd3fc",
+          400: "#38bdf8",
+          500: "#0ea5e9", // Trust blue
+          600: "#0284c7",
+          700: "#0369a1",
+          800: "#075985",
+          900: "#0c4a6e",
+        },
+        // Supporting colors
         coral: {
           50: "#fff5f0",
           100: "#ffe8db",
           200: "#ffcfb3",
           300: "#ffad80",
           400: "#ff814d",
-          500: "#ff5c26", // primary
+          500: "#ff5c26",
           600: "#f04410",
           700: "#c9330a",
           800: "#a02c10",
@@ -58,7 +83,6 @@ const config: Config = {
           800: "#166534",
           900: "#14532d",
         },
-        // New accent — lavender for playful variety
         lavender: {
           50: "#faf5ff",
           100: "#f3e8ff",
@@ -73,24 +97,30 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Nunito", "system-ui", "sans-serif"],
-        display: ["Nunito", "system-ui", "sans-serif"],
+        sans: ["Baloo 2", "Comic Neue", "system-ui", "sans-serif"],
+        display: ["Baloo 2", "Comic Neue", "system-ui", "sans-serif"],
       },
       borderRadius: {
         "4xl": "2rem",
         "5xl": "2.5rem",
+        clay: "2rem",
+        "clay-lg": "3rem",
       },
       boxShadow: {
+        // Claymorphism shadows
+        clay: "inset 0 -4px 8px rgba(0, 0, 0, 0.08), inset 0 4px 8px rgba(255, 255, 255, 0.8), 0 8px 24px rgba(0, 0, 0, 0.1)",
+        "clay-hover": "inset 0 -4px 8px rgba(0, 0, 0, 0.08), inset 0 4px 8px rgba(255, 255, 255, 0.8), 0 12px 32px rgba(0, 0, 0, 0.15)",
+        // Legacy (kept for transition)
         card: "0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)",
         "card-hover":
           "0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06)",
         "card-active":
           "0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)",
         bubble:
-          "0 8px 32px rgba(255, 92, 38, 0.15), 0 2px 8px rgba(0, 0, 0, 0.06)",
+          "0 8px 32px rgba(236, 72, 153, 0.15), 0 2px 8px rgba(0, 0, 0, 0.06)",
         "bubble-lg":
-          "0 16px 48px rgba(255, 92, 38, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08)",
-        glow: "0 0 24px rgba(255, 92, 38, 0.3)",
+          "0 16px 48px rgba(236, 72, 153, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08)",
+        glow: "0 0 24px rgba(236, 72, 153, 0.3)",
         "glow-lavender": "0 0 24px rgba(167, 139, 250, 0.3)",
       },
       animation: {

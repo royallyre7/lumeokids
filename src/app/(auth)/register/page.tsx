@@ -148,7 +148,7 @@ export default function RegisterPage() {
         Already have an account?{" "}
         <Link
           href="/login"
-          className="text-coral-500 hover:text-coral-600 font-semibold transition-colors"
+          className="text-primary-500 hover:text-primary-600 font-semibold transition-colors"
         >
           Sign in
         </Link>

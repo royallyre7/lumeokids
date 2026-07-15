@@ -14,8 +14,8 @@ const levelNames: Record<string, string> = {
 };
 
 const avatarColors = [
-  { bg: "bg-coral-100", text: "text-coral-600", ring: "ring-coral-200" },
-  { bg: "bg-sky-100", text: "text-sky-600", ring: "ring-sky-200" },
+  { bg: "bg-primary-100", text: "text-primary-600", ring: "ring-primary-200" },
+  { bg: "bg-accent-100", text: "text-accent-600", ring: "ring-accent-200" },
   { bg: "bg-lavender-100", text: "text-lavender-600", ring: "ring-lavender-200" },
   { bg: "bg-mint-100", text: "text-mint-600", ring: "ring-mint-200" },
   { bg: "bg-sunny-100", text: "text-sunny-600", ring: "ring-sunny-200" },
@@ -53,16 +53,16 @@ export default async function DashboardPage() {
       {/* === Stats Row — Playful Bubbles === */}
       {children.length > 0 && (
         <div className="grid grid-cols-3 gap-4 mb-8 stagger-children">
-          <Card variant="accent" accentColor="coral">
-            <p className="text-3xl font-extrabold text-coral-500">
+          <Card variant="accent" accentColor="primary">
+            <p className="text-3xl font-extrabold text-primary-500">
               {children.length}
             </p>
             <p className="text-sm text-stone-500 mt-1 font-medium">
               {children.length > 1 ? "Children" : "Child"}
             </p>
           </Card>
-          <Card variant="accent" accentColor="sky">
-            <p className="text-3xl font-extrabold text-sky-600">
+          <Card variant="accent" accentColor="accent">
+            <p className="text-3xl font-extrabold text-accent-600">
               {children
                 .filter((c) => c.learningLevel === "ADVANCED")
                 .length}

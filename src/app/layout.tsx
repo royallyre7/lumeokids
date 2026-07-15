@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Baloo_2, Comic_Neue } from "next/font/google";
 import "./globals.css";
 
-const nunito = Nunito({
+const baloo2 = Baloo_2({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
   display: "swap",
+  variable: "--font-baloo2",
+});
+
+const comicNeue = Comic_Neue({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  display: "swap",
+  variable: "--font-comic-neue",
 });
 
 export const metadata: Metadata = {
@@ -21,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${nunito.className} min-h-screen flex flex-col`}>
+      <body className={`${baloo2.className} ${comicNeue.variable} min-h-screen flex flex-col`}>
         {children}
       </body>
     </html>

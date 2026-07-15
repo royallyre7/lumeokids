@@ -10,7 +10,7 @@ export default function LogoutButton() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="w-9 h-9 rounded-full bg-gradient-to-br from-coral-400 to-lavender-500 text-white font-extrabold text-sm flex items-center justify-center hover:shadow-glow transition-all duration-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coral-400"
+        className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-400 to-lavender-500 text-white font-extrabold text-sm flex items-center justify-center hover:shadow-glow transition-all duration-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400"
         aria-label="User menu"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -24,7 +24,7 @@ export default function LogoutButton() {
             className="fixed inset-0 z-10"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-bubble border border-stone-100 py-1.5 z-20 animate-pop-in">
+          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-clay shadow-clay border border-stone-100 py-1.5 z-20 animate-pop-in">
             <button
               onClick={() => {
                 setOpen(false);

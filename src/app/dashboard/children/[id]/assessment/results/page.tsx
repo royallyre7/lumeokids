@@ -41,14 +41,14 @@ export default async function AssessmentResultsPage({
       <div className="max-w-2xl mx-auto animate-fade-in">
         <Link
           href={`/dashboard/children/${params.id}`}
-          className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-coral-500 transition-colors mb-6"
+          className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-primary-500 transition-colors mb-6"
         >
           ← Back to Child Profile
         </Link>
         <Card>
           <div className="text-center py-12 relative overflow-hidden">
             {/* Decorative blobs */}
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-coral-100 rounded-full blur-2xl opacity-50" aria-hidden="true" />
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-primary-100 rounded-full blur-2xl opacity-50" aria-hidden="true" />
             <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-lavender-100 rounded-full blur-2xl opacity-50" aria-hidden="true" />
 
             <div className="relative z-10">
@@ -119,7 +119,7 @@ export default async function AssessmentResultsPage({
     <div className="max-w-2xl mx-auto animate-fade-in">
       <Link
         href={`/dashboard/children/${params.id}`}
-        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-coral-500 transition-colors mb-4 no-print"
+        className="inline-flex items-center gap-1 text-sm font-medium text-stone-400 hover:text-primary-500 transition-colors mb-4 no-print"
       >
         ← Back to {child.name}&apos;s Profile
       </Link>
@@ -154,7 +154,7 @@ export default async function AssessmentResultsPage({
             value={overallPct}
             size={100}
             strokeWidth={8}
-            color="coral"
+            color="primary"
             label="Overall"
           />
           <div className="text-left">
@@ -200,7 +200,7 @@ export default async function AssessmentResultsPage({
                     {growth && hasGrowthData && (
                       <span className={`text-xs font-bold ${
                         growth.trend.direction === "up" ? "text-mint-500" :
-                        growth.trend.direction === "down" ? "text-coral-400" :
+                        growth.trend.direction === "down" ? "text-primary-400" :
                         "text-stone-400"
                       }`}>
                         {growth.trend.direction === "up" && `↑ +${growth.trend.delta}`}
@@ -276,9 +276,9 @@ export default async function AssessmentResultsPage({
                   </span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                     result.zone === "Outstanding" ? "bg-mint-100 text-mint-700" :
-                    result.zone === "Strong" ? "bg-sky-100 text-sky-700" :
+                    result.zone === "Strong" ? "bg-accent-100 text-accent-700" :
                     result.zone === "Emerging" ? "bg-sunny-100 text-sunny-700" :
-                    "bg-coral-100 text-coral-700"
+                    "bg-primary-100 text-primary-700"
                   }`}>
                     {result.zone}
                   </span>
@@ -312,12 +312,12 @@ export default async function AssessmentResultsPage({
               <Card
                 key={arch.name}
                 variant={i === 0 ? "accent" : "default"}
-                accentColor={i === 0 ? "coral" : "sky"}
-                className={i === 0 ? "ring-2 ring-coral-200" : ""}
+                accentColor={i === 0 ? "primary" : "accent"}
+                className={i === 0 ? "ring-2 ring-primary-200" : ""}
               >
                 {/* Match badge */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-coral-100 to-lavender-100 flex items-center justify-center text-3xl">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-100 to-lavender-100 flex items-center justify-center text-3xl">
                     {arch.emoji}
                   </div>
                   <div>
@@ -326,7 +326,7 @@ export default async function AssessmentResultsPage({
                         {arch.name}
                       </h3>
                       {i === 0 && (
-                        <span className="pill-coral">
+                        <span className="pill-primary">
                           ⭐ Best Match
                         </span>
                       )}
@@ -345,7 +345,7 @@ export default async function AssessmentResultsPage({
                   </div>
                   <div className="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-coral-400 via-lavender-400 to-sky-400 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-primary-400 via-lavender-400 to-accent-400 rounded-full transition-all duration-500"
                       style={{ width: `${arch.matchStrength}%` }}
                     />
                   </div>
@@ -366,7 +366,7 @@ export default async function AssessmentResultsPage({
                           key={s}
                           className="text-sm text-stone-700 flex items-start gap-2"
                         >
-                          <span className="text-coral-400 mt-0.5 shrink-0">✦</span>
+                          <span className="text-primary-400 mt-0.5 shrink-0">✦</span>
                           {s}
                         </li>
                       ))}
@@ -382,7 +382,7 @@ export default async function AssessmentResultsPage({
                           key={a}
                           className="text-sm text-stone-700 flex items-start gap-2"
                         >
-                          <span className="text-sky-400 mt-0.5 shrink-0">✦</span>
+                          <span className="text-accent-400 mt-0.5 shrink-0">✦</span>
                           {a}
                         </li>
                       ))}
@@ -391,16 +391,16 @@ export default async function AssessmentResultsPage({
                 </div>
 
                 {/* Learning Style */}
-                <div className="mb-3 p-4 bg-gradient-to-r from-sky-50 to-lavender-50 rounded-2xl">
-                  <h4 className="text-xs font-bold text-sky-600 uppercase tracking-wider mb-1">
+                <div className="mb-3 p-4 bg-gradient-to-r from-accent-50 to-lavender-50 rounded-2xl">
+                  <h4 className="text-xs font-bold text-accent-600 uppercase tracking-wider mb-1">
                     📖 How They Learn Best
                   </h4>
                   <p className="text-sm text-stone-700">{arch.learningStyle}</p>
                 </div>
 
                 {/* Support Guidance */}
-                <div className="p-4 bg-gradient-to-r from-coral-50 to-sunny-50 rounded-2xl">
-                  <h4 className="text-xs font-bold text-coral-600 uppercase tracking-wider mb-1">
+                <div className="p-4 bg-gradient-to-r from-primary-50 to-sunny-50 rounded-2xl">
+                  <h4 className="text-xs font-bold text-primary-600 uppercase tracking-wider mb-1">
                     💡 What They May Need Support With
                   </h4>
                   <p className="text-sm text-stone-700">{arch.supportGuidance}</p>
