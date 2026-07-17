@@ -31,7 +31,10 @@ model Child {
   parentId String
   parent   User   @relation(fields: [parentId], references: [id], onDelete: Cascade)
 
-  assessments Assessment[]
+  assessments        Assessment[]
+  mazeExercises      MazeExercise[]
+  mandalaExercises   MandalaExercise[]
+  rightBrainExercises RightBrainExercise[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -65,4 +68,49 @@ model ErrorLog {
 
   @@index([createdAt])
   @@index([level])
+}
+
+model MazeExercise {
+  id          String   @id @default(uuid())
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  difficulty  String   @default("easy")
+  maze        String   // JSON: { rows, cols, grid, start, end }
+  completed   Boolean  @default(false)
+  score       Int?
+  timeSpent   Int?     // seconds
+  steps       Int?     // number of moves taken
+  createdAt   DateTime @default(now())
+
+  @@index([childId])
+}
+
+model MandalaExercise {
+  id          String   @id @default(uuid())
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  difficulty  String   @default("easy")
+  pattern     String   // JSON: { symmetry, slices, palette }
+  completed   Boolean  @default(false)
+  score       Int?
+  timeSpent   Int?     // seconds
+  recallCount Int?     // how many colors they recalled correctly
+  createdAt   DateTime @default(now())
+
+  @@index([childId])
+}
+
+model RightBrainExercise {
+  id          String   @id @default(uuid())
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  category    String   // spatial-rotation, pattern-completion, visual-memory, odd-one-out, mirror-image
+  difficulty  String   @default("easy")
+  data        String   // JSON: exercise-specific data
+  completed   Boolean  @default(false)
+  score       Int?
+  timeSpent   Int?     // seconds
+  createdAt   DateTime @default(now())
+
+  @@index([childId])
 }

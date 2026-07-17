@@ -118,6 +118,50 @@ export default async function ChildDetailPage({
             </div>
           </Card>
         </div>
+
+        {/* Games CTA */}
+        <div className="px-8 pb-8">
+          <Card variant="accent" accentColor="sunny">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <h2 className="font-bold text-stone-700">
+                  🎮 Learning Games
+                </h2>
+                <p className="text-sm text-stone-500 mt-1">
+                  Fun brain-training exercises — Maze, Mandala Memory, and Right Brain puzzles.
+                </p>
+              </div>
+              <Button
+                href={`/dashboard/children/${child.id}/games`}
+                variant="outline"
+              >
+                Play Games
+              </Button>
+            </div>
+          </Card>
+        </div>
+
+        {/* Homework CTA */}
+        <div className="px-8 pb-8">
+          <Card variant="accent" accentColor="lavender">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <h2 className="font-bold text-stone-700">
+                  📚 Homework Generator
+                </h2>
+                <p className="text-sm text-stone-500 mt-1">
+                  Generate Child Development practice sheets with AI illustrations.
+                </p>
+              </div>
+              <Button
+                href={`/dashboard/children/${child.id}/homework`}
+                variant="lavender"
+              >
+                Generate PDF
+              </Button>
+            </div>
+          </Card>
+        </div>
       </div>
 
       {/* Info Grid — Playful Bubbles accent cards */}

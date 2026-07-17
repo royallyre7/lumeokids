@@ -25,9 +25,39 @@
 ## Current Session State
 
 ### Status: `IN PROGRESS`
-- **Last worked on**: 2026-07-14 — Integrated assessment method modules + Puppeteer PDF
+- **Last worked on**: 2026-07-17 — Game modules + Homework system (uncommitted)
 - **Branch**: `main`
-- **Last commit**: `1bdc7ef` — docs: add assessment method spec and integrated results screenshot
+- **Last commit**: `88f21cf` — feat: upgrade UI/UX with Playful Bubbles design system and Claymorphism
+- **Uncommitted changes**: Game modules, homework system, AI image/quota utilities
+
+### Session Summary (2026-07-17)
+
+#### Game Modules System (UNCOMMITTED)
+- **3 game types implemented**:
+  - **Maze Game** (`src/lib/games/maze.ts`, `src/components/games/MazeRenderer.tsx`) — procedural maze generation, player movement, collectibles
+  - **Mandala Coloring** (`src/lib/games/mandala.ts`, `src/components/games/MandalaRenderer.tsx`) — SVG mandala templates, color palette, fill interactions
+  - **Right-Brain Training** (`src/lib/games/rightBrain.ts`, `src/components/games/RightBrainCard.tsx`) — spatial reasoning exercises, pattern matching
+- **Game engine** (`src/lib/games/types.ts`, `src/lib/games/index.ts`) — shared types, difficulty scaling, scoring system
+- **UI components** (`src/components/games/GameCard.tsx`, `src/components/games/ExerciseList.tsx`) — game selection cards, exercise history
+- **Pages** (`src/app/dashboard/children/[id]/games/page.tsx`, `src/app/dashboard/children/[id]/games/actions.ts`) — game hub, game actions
+- **Database models**: `MazeExercise`, `MandalaExercise`, `RightBrainExercise` added to schema
+
+#### Homework System (UNCOMMITTED)
+- **AI-powered homework generation** (`src/lib/homework/`) — creates personalized worksheets based on child assessment results
+  - `template.ts` — HTML/CSS templates for worksheet rendering
+  - `generator.ts` — orchestrates exercise generation across subjects
+  - `generators/` — subject-specific generators (math, language, science)
+  - `types.ts` — homework types (worksheets, exercises, answer keys)
+  - `utils.ts` — formatting, scoring, difficulty adjustment
+- **AI Image Service** (`src/lib/aiImage.ts`) — generates illustrations for homework exercises
+  - Multi-provider support (Google, OpenAI, Claude)
+  - Fallback to emoji placeholders when providers unavailable
+  - In-memory cache for generated images
+- **AI Quota Router** (`src/lib/aiQuota.ts`) — manages API usage limits
+  - Free tier: 10 images/day | Pro tier: 100 images/day
+  - Provider priority: Google → OpenAI → Claude → Local fallback
+- **API endpoint** (`src/app/api/homework/generate/`) — POST endpoint for homework generation
+- **UI** (`src/app/dashboard/children/[id]/homework/page.tsx`) — homework view page
 
 ### Session Summary (2026-07-14)
 
@@ -157,10 +187,18 @@ lumeokids/
 │   │   │       ├── new/page.tsx    # 2-step create form
 │   │   │       └── [id]/
 │   │   │           ├── page.tsx     # Profile detail + assessment CTA
-│   │   │           └── assessment/
-│   │   │               ├── page.tsx      # 11-step assessment wizard
-│   │   │               └── results/
-│   │   │                   └── page.tsx  # Results + archetype cards
+│   │   │           ├── assessment/
+│   │   │           │   ├── page.tsx      # 11-step assessment wizard
+│   │   │           │   └── results/
+│   │   │           │       └── page.tsx  # Results + archetype cards
+│   │   │           ├── games/           # Game hub (UNCOMMITTED)
+│   │   │           │   ├── page.tsx
+│   │   │           │   ├── actions.ts
+│   │   │           │   ├── maze/
+│   │   │           │   ├── mandala/
+│   │   │           │   └── right-brain/
+│   │   │           └── homework/        # Homework view (UNCOMMITTED)
+│   │   │               └── page.tsx
 │   │   └── api/
 │   │       ├── auth/
 │   │       │   ├── [...nextauth]/route.ts
@@ -168,24 +206,34 @@ lumeokids/
 │   │       ├── children/
 │   │       │   ├── route.ts
 │   │       │   └── [id]/route.ts
-│   │       └── assessments/
-│   │           └── route.ts         # POST + GET assessment
-│   │       └── children/
-│   │           └── [id]/
-│   │               └── assessment/
-│   │                   └── pdf/
-│   │                       └── route.ts  # POST — Puppeteer PDF generation
-│   ├── components/ui/
-│   │   ├── Button.tsx              # 5 variants (primary/secondary/outline/ghost/lavender), pill-shaped, gradient fills
-│   │   ├── Input.tsx               # label + error + icon + hint, ARIA support
-│   │   ├── Card.tsx                # default + accent + glass + interactive variants
-│   │   ├── Badge.tsx               # 8 color variants + optional emoji icon
-│   │   ├── EmptyState.tsx          # floating icon + decorative blobs + CTA
-│   │   ├── LogoutButton.tsx        # gradient avatar + popIn dropdown
-│   │   ├── FloatingBlobs.tsx       # Decorative floating blob shapes (Playful Bubbles)
-│   │   ├── ProgressRing.tsx        # SVG circular progress with 5 color options
-│   │   └── reports/
-│   │       └── ParentReport.tsx    # Professional report with domain frameworks + zone guidance
+│   │       ├── assessments/
+│   │       │   └── route.ts         # POST + GET assessment
+│   │       ├── children/
+│   │       │   └── [id]/
+│   │       │       └── assessment/
+│   │       │           └── pdf/
+│   │       │               └── route.ts  # POST — Puppeteer PDF generation
+│   │       └── homework/                # Homework API (UNCOMMITTED)
+│   │           └── generate/
+│   │               └── route.ts
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── Button.tsx              # 5 variants, pill-shaped, gradient fills
+│   │   │   ├── Input.tsx               # label + error + icon + hint, ARIA support
+│   │   │   ├── Card.tsx                # default + accent + glass + interactive variants
+│   │   │   ├── Badge.tsx               # 8 color variants + optional emoji icon
+│   │   │   ├── EmptyState.tsx          # floating icon + decorative blobs + CTA
+│   │   │   ├── LogoutButton.tsx        # gradient avatar + popIn dropdown
+│   │   │   ├── FloatingBlobs.tsx       # Decorative floating blob shapes
+│   │   │   ├── ProgressRing.tsx        # SVG circular progress with 5 color options
+│   │   │   └── reports/
+│   │   │       └── ParentReport.tsx    # Professional report with domain frameworks
+│   │   └── games/                      # Game UI components (UNCOMMITTED)
+│   │       ├── GameCard.tsx
+│   │       ├── ExerciseList.tsx
+│   │       ├── MazeRenderer.tsx
+│   │       ├── MandalaRenderer.tsx
+│   │       └── RightBrainCard.tsx
 │   ├── lib/
 │   │   ├── prisma.ts               # Prisma singleton
 │   │   ├── auth.ts                 # NextAuth config
@@ -195,18 +243,26 @@ lumeokids/
 │   │   ├── utils.ts                # calculateAge, getInitial, getTimeOfDay
 │   │   ├── puppeteer.ts            # Browser singleton for PDF generation
 │   │   ├── pdf-template.ts         # Self-contained HTML/CSS template for results PDF
-│   │   ├── domainMapping.ts        # Scientific framework mapping (A→J → Gardner, Duckworth, etc.)
+│   │   ├── domainMapping.ts        # Scientific framework mapping (A→J)
 │   │   ├── methods.ts              # 9 theoretical methods metadata
 │   │   ├── zonesPro.ts             # Professional zone descriptions + parent/educator guidance
-│   │   └── growth.ts               # Growth trend engine across multiple assessments
+│   │   ├── growth.ts               # Growth trend engine across multiple assessments
+│   │   ├── aiImage.ts              # AI image generation service (UNCOMMITTED)
+│   │   ├── aiQuota.ts              # Multi-AI quota router (UNCOMMITTED)
+│   │   ├── games/                  # Game engine logic (UNCOMMITTED)
+│   │   │   ├── types.ts
+│   │   │   ├── index.ts
+│   │   │   ├── maze.ts
+│   │   │   ├── mandala.ts
+│   │   │   └── rightBrain.ts
+│   │   └── homework/               # Homework system (UNCOMMITTED)
+│   │       ├── types.ts
+│   │       ├── template.ts
+│   │       ├── generator.ts
+│   │       ├── utils.ts
+│   │       └── generators/         # Subject-specific generators
 │   └── middleware.ts               # Auth guard for /dashboard/*
 ├── screenshots/                    # 6 screenshots at 1280×800
-│   ├── 01-landing.png
-│   ├── 02-login.png
-│   ├── 03-register.png
-│   ├── 04-dashboard.png
-│   ├── 05-child-detail.png
-│   └── 06-assessment-results.png
 ├── slides/
 │   └── pitch.md                    # 10-slide product-intro deck
 ├── .claude/
@@ -219,11 +275,12 @@ lumeokids/
 ```
 
 ### Next Step
-> **Priority: Ch-5 submission (today's work not yet committed).**
-> - Run `bash doctor.sh ch-5` to verify all green
-> - Commit today's changes (PDF download fix, feedback-issues update)
+> **Priority: Commit game modules + homework system.**
+> - Run `prisma migrate dev` to apply new schema (game/homework models)
+> - Test game modules (maze, mandala, right-brain)
+> - Test homework generation flow
+> - Commit all uncommitted changes
 > - Push to GitHub
-> - Post in Discord `#ch-5` channel
 > - **Then**: Edit & Delete Child Profiles — Add `PUT`/`DELETE` routes + UI (edit button on detail page, delete with confirmation). Then proceed to **Milestone Tracking** module.
 
 ### Known Issues / Gotchas
