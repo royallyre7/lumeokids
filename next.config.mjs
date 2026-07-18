@@ -1,5 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Standalone output for Docker deployment
+  output: "standalone",
+
+  // Enable gzip compression
+  compress: true,
+
+  // Remove X-Powered-By header
+  poweredByHeader: false,
+
+  // Optimized image formats
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
+
   async headers() {
     return [
       {

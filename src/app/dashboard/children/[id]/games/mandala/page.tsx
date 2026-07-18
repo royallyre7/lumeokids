@@ -8,8 +8,13 @@ import {
   completeMandalaExercise,
   getMandalaExercises,
 } from "../actions";
-import MandalaRenderer from "@/components/games/MandalaRenderer";
+import dynamic from "next/dynamic";
 import ExerciseList from "@/components/games/ExerciseList";
+
+const MandalaRenderer = dynamic(() => import("@/components/games/MandalaRenderer"), {
+  ssr: false,
+  loading: () => <div className="card p-6 text-center animate-pulse-soft">Loading mandala...</div>,
+});
 import type { MandalaData, Difficulty } from "@/lib/games/types";
 
 type MandalaWithMeta = MandalaData & { flashDuration: number; sectionColors: Record<string, number>[] };

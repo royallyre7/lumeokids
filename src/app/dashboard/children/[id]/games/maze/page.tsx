@@ -8,8 +8,13 @@ import {
   completeMazeExercise,
   getMazeExercises,
 } from "../actions";
-import MazeRenderer from "@/components/games/MazeRenderer";
+import dynamic from "next/dynamic";
 import ExerciseList from "@/components/games/ExerciseList";
+
+const MazeRenderer = dynamic(() => import("@/components/games/MazeRenderer"), {
+  ssr: false,
+  loading: () => <div className="card p-6 text-center animate-pulse-soft">Loading maze...</div>,
+});
 import type { MazeData, Difficulty } from "@/lib/games/types";
 
 interface Exercise {

@@ -8,8 +8,13 @@ import {
   completeRightBrainExercise,
   getRightBrainExercises,
 } from "../actions";
-import RightBrainCard from "@/components/games/RightBrainCard";
+import dynamic from "next/dynamic";
 import ExerciseList from "@/components/games/ExerciseList";
+
+const RightBrainCard = dynamic(() => import("@/components/games/RightBrainCard"), {
+  ssr: false,
+  loading: () => <div className="card p-6 text-center animate-pulse-soft">Loading exercise...</div>,
+});
 import type { RightBrainExerciseData, RightBrainCategory, Difficulty } from "@/lib/games/types";
 
 interface Exercise {
