@@ -291,9 +291,6 @@ lumeokids/
 - [x] Security Hardening (headers, JWT, input validation)
 - [x] Learning Games (Maze, Mandala, Right Brain)
 - [x] Homework Generator (42-page PDF with AI images)
-- [x] 9Router AI Integration (cost routing + cascade fallback)
-- [x] Docker + PostgreSQL support
-- [x] Low-bandwidth optimizations (standalone, dynamic imports, gzip)
 - [ ] Edit & Delete Child Profiles
 - [ ] Milestone Tracking
 - [ ] Daily Activity Training
