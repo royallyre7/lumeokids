@@ -25,14 +25,21 @@
 ## Current Session State
 
 ### Status: `IN PROGRESS`
-- **Last worked on**: 2026-07-17 — Game modules + Homework system (uncommitted)
+- **Last worked on**: 2026-07-17 — Homework PDF quality fix (P0)
 - **Branch**: `main`
-- **Last commit**: `88f21cf` — feat: upgrade UI/UX with Playful Bubbles design system and Claymorphism
-- **Uncommitted changes**: Game modules, homework system, AI image/quota utilities
+- **Last commit**: `b789634` — feat: fix homework PDF quality — 9Router, custom renderers, resilience
+- **Uncommitted changes**: None (game modules committed earlier)
 
 ### Session Summary (2026-07-17)
 
-#### Game Modules System (UNCOMMITTED)
+#### Homework PDF Quality Fix (P0) — `b789634`
+- **9Router AI routing**: Added as priority-1 provider (`localhost:20128/v1`), cascade fallback → Google → OpenAI → SVG placeholder
+- **6 custom renderers added**: equal-division, curved-maze, word-grids, shape-decompose, dot-grid, memory-grid (all 22 exercise types now have custom SVG/HTML)
+- **Resilience layer**: Fetch timeouts (10s), circuit breaker (3 failures → 60s skip)
+- **PDF quality**: Added `preferCSSPageSize: true` to Puppeteer, improved CSS (font smoothing, sharper borders)
+- **Dynamic data**: All 7 inline pages now generate randomized content via seeded PRNG
+
+#### Game Modules System (UNCOMMITTED → committed with game modules commit)
 - **3 game types implemented**:
   - **Maze Game** (`src/lib/games/maze.ts`, `src/components/games/MazeRenderer.tsx`) — procedural maze generation, player movement, collectibles
   - **Mandala Coloring** (`src/lib/games/mandala.ts`, `src/components/games/MandalaRenderer.tsx`) — SVG mandala templates, color palette, fill interactions
@@ -275,13 +282,11 @@ lumeokids/
 ```
 
 ### Next Step
-> **Priority: Commit game modules + homework system.**
-> - Run `prisma migrate dev` to apply new schema (game/homework models)
-> - Test game modules (maze, mandala, right-brain)
-> - Test homework generation flow
-> - Commit all uncommitted changes
-> - Push to GitHub
-> - **Then**: Edit & Delete Child Profiles — Add `PUT`/`DELETE` routes + UI (edit button on detail page, delete with confirmation). Then proceed to **Milestone Tracking** module.
+> **Priority: Edit & Delete Child Profiles.**
+> - Add `PUT`/`DELETE` routes to `/api/children/[id]`
+> - Add edit button on child detail page
+> - Add delete with confirmation dialog
+> - Then proceed to **Milestone Tracking** module.
 
 ### Known Issues / Gotchas
 - Multi-step create form: step dividers split groups visually but **all inputs stay in DOM** (hidden, not conditional) — don't revert to `{step === 1 && (...)}`
