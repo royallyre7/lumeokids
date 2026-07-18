@@ -25,12 +25,17 @@
 ## Current Session State
 
 ### Status: `IN PROGRESS`
-- **Last worked on**: 2026-07-17 — Docker + Postgres + low-bandwidth (P1)
+- **Last worked on**: 2026-07-17 — Documentation + roadmap cleanup
 - **Branch**: `main`
-- **Last commit**: `9c7e2ee` — feat: P1 — Docker + Postgres + low-bandwidth optimizations
+- **Last commit**: `39f779c` — docs: remove 9Router, Docker, low-bandwidth from roadmap
 - **Uncommitted changes**: None
 
 ### Session Summary (2026-07-17)
+
+#### Documentation — `b1a7a3e` + `39f779c`
+- **README.md**: Rewritten with all features (games, homework, Docker, 9Router)
+- **IMPLEMENTATION.md**: Full setup guide (local, Docker, DB, AI, games, homework, deployment, troubleshooting)
+- **Roadmap updated**: Removed 9Router, Docker, low-bandwidth from visible roadmap
 
 #### P1: Docker + Postgres + Low-Bandwidth — `9c7e2ee`
 - **Dockerfile**: Multi-stage build (deps → builder → runner) with Chromium for Puppeteer
