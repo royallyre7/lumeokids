@@ -25,12 +25,18 @@
 ## Current Session State
 
 ### Status: `IN PROGRESS`
-- **Last worked on**: 2026-07-17 — Homework PDF quality fix (P0)
+- **Last worked on**: 2026-07-17 — Docker + Postgres + low-bandwidth (P1)
 - **Branch**: `main`
-- **Last commit**: `b789634` — feat: fix homework PDF quality — 9Router, custom renderers, resilience
-- **Uncommitted changes**: None (game modules committed earlier)
+- **Last commit**: `9c7e2ee` — feat: P1 — Docker + Postgres + low-bandwidth optimizations
+- **Uncommitted changes**: None
 
 ### Session Summary (2026-07-17)
+
+#### P1: Docker + Postgres + Low-Bandwidth — `9c7e2ee`
+- **Dockerfile**: Multi-stage build (deps → builder → runner) with Chromium for Puppeteer
+- **docker-compose.yml**: Web + Postgres 16 with healthcheck
+- **Postgres support**: Prisma schema updated, `.env.example` with both SQLite/Postgres URLs
+- **Low-bandwidth**: `standalone` output, gzip compression, AVIF/WebP images, dynamic imports for game renderers, loading skeletons
 
 #### Homework PDF Quality Fix (P0) — `b789634`
 - **9Router AI routing**: Added as priority-1 provider (`localhost:20128/v1`), cascade fallback → Google → OpenAI → SVG placeholder
