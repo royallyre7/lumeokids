@@ -4,13 +4,13 @@
 // Routes image generation requests across multiple providers
 // with free/pro tier support and daily quota tracking.
 //
-// Provider priority: Google → OpenAI → Claude → Local fallback
+// Provider priority: 9Router → Google → OpenAI → Claude → Local fallback
 // Free tier: 10 images/day | Pro tier: 100 images/day
 
 // ============================================================
 // Types
 // ============================================================
-export type AiProvider = "google" | "openai" | "claude" | "local";
+export type AiProvider = "nine-router" | "google" | "openai" | "claude" | "local";
 export type UserTier = "free" | "pro";
 
 export interface ProviderConfig {
@@ -95,12 +95,23 @@ class QuotaManager {
 // ============================================================
 // Provider Configurations
 // ============================================================
+const NINE_ROUTER_URL = process.env.NINE_ROUTER_URL || "http://localhost:20128/v1";
+
 const PROVIDERS: ProviderConfig[] = [
+  {
+    name: "nine-router",
+    apiKey: process.env.NINE_ROUTER_API_KEY || "local",
+    enabled: true, // Always try 9Router first
+    priority: 1,
+    freeDailyLimit: 50,
+    proDailyLimit: 500,
+    supportsImages: true,
+  },
   {
     name: "google",
     apiKey: process.env.GOOGLE_AI_API_KEY ?? null,
     enabled: !!process.env.GOOGLE_AI_API_KEY,
-    priority: 1,
+    priority: 2,
     freeDailyLimit: 10,
     proDailyLimit: 100,
     supportsImages: true,
@@ -109,7 +120,7 @@ const PROVIDERS: ProviderConfig[] = [
     name: "openai",
     apiKey: process.env.OPENAI_API_KEY ?? null,
     enabled: !!process.env.OPENAI_API_KEY,
-    priority: 2,
+    priority: 3,
     freeDailyLimit: 10,
     proDailyLimit: 100,
     supportsImages: true,
@@ -118,7 +129,7 @@ const PROVIDERS: ProviderConfig[] = [
     name: "claude",
     apiKey: process.env.ANTHROPIC_API_KEY ?? null,
     enabled: !!process.env.ANTHROPIC_API_KEY,
-    priority: 3,
+    priority: 4,
     freeDailyLimit: 5,
     proDailyLimit: 50,
     supportsImages: false, // Claude doesn't generate images
@@ -127,7 +138,7 @@ const PROVIDERS: ProviderConfig[] = [
     name: "local",
     apiKey: "local", // No API key needed
     enabled: true, // Always available as fallback
-    priority: 4,
+    priority: 5,
     freeDailyLimit: 999,
     proDailyLimit: 999,
     supportsImages: true, // Uses placeholder/emoji
@@ -191,4 +202,4 @@ export function hasAvailableProvider(tier: UserTier): boolean {
   return getAvailableProvider(tier) !== null;
 }
 
-export { PROVIDERS, quotaManager };
+export { PROVIDERS, quotaManager, NINE_ROUTER_URL };

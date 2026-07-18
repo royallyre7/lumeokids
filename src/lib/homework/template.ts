@@ -404,6 +404,266 @@ function renderMandalaMemoryPage(page: HomeworkPage): string {
   `;
 }
 
+// ============================================================
+// Equal Division — Page 2
+// ============================================================
+function renderEqualDivisionPage(page: HomeworkPage): string {
+  const d = page.data as any;
+  const totalItems = d.totalItems || 8;
+  const groups = d.groups || 4;
+  const itemName = d.itemName || "item";
+
+  // Emoji map for common items
+  const emojiMap: Record<string, string> = {
+    carrot: "🥕", apple: "🍎", star: "⭐", heart: "❤️",
+    fish: "🐟", bird: "🐦", flower: "🌸", ball: "⚽",
+  };
+  const emoji = emojiMap[itemName] || "●";
+
+  return `
+    <div class="equal-division-section">
+      <div class="eq-instruction">Divide the box into <strong>${groups}</strong> equal parts, each containing <strong>${Math.floor(totalItems / groups)}</strong> ${itemName}s.</div>
+      <div class="eq-box">
+        <div class="eq-items">
+          ${Array.from({ length: totalItems }, () => `<span class="eq-item">${emoji}</span>`).join("")}
+        </div>
+        <div class="eq-lines-hint">
+          ${Array.from({ length: groups - 1 }, () => `<div class="eq-dashed-line"></div>`).join("")}
+        </div>
+      </div>
+      <div class="eq-answer-area">
+        <span class="eq-label">Each group has</span>
+        <span class="eq-answer-box"></span>
+        <span class="eq-label">${itemName}s</span>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// Curved Maze — Pages 13-14
+// ============================================================
+function renderCurvedMazePage(page: HomeworkPage): string {
+  const d = page.data as any;
+  const theme = d.theme || "apples";
+  const itemsInside = d.itemsInside || 5;
+  const itemsOutside = d.itemsOutside || 8;
+
+  const emojiMap: Record<string, string> = {
+    apples: "🍎", carrots: "🥕", stars: "⭐", fish: "🐟",
+  };
+  const emoji = emojiMap[theme] || "●";
+
+  // Generate curved maze SVG paths
+  const mazeW = 400, mazeH = 300;
+  const paths = [
+    `M 50,50 C 100,20 200,80 250,50 S 350,80 380,50`,
+    `M 30,100 C 80,130 150,70 200,100 S 300,130 370,100`,
+    `M 50,150 C 120,180 180,120 250,150 S 340,180 380,150`,
+    `M 30,200 C 90,230 160,170 230,200 S 320,230 370,200`,
+    `M 50,250 C 110,280 190,220 260,250 S 350,280 380,250`,
+  ];
+
+  // Place items along paths (some inside, some outside the curves)
+  const insideItems = Array.from({ length: itemsInside }, (_, i) => {
+    const x = 60 + (i * (mazeW - 120) / itemsInside);
+    const y = 80 + Math.sin(i * 1.2) * 40;
+    return `<text x="${x}" y="${y}" font-size="16" text-anchor="middle">${emoji}</text>`;
+  });
+  const outsideItems = Array.from({ length: itemsOutside }, (_, i) => {
+    const x = 40 + (i * (mazeW - 80) / itemsOutside);
+    const y = 20 + Math.cos(i * 0.9) * 15;
+    return `<text x="${x}" y="${y}" font-size="14" text-anchor="middle" opacity="0.5">${emoji}</text>`;
+  });
+
+  return `
+    <div class="curved-maze-section">
+      <div class="maze-svg-container">
+        <svg viewBox="0 0 ${mazeW} ${mazeH}" class="maze-svg">
+          <rect width="${mazeW}" height="${mazeH}" fill="#fafafa" stroke="#ddd" rx="8"/>
+          ${paths.map((p) => `<path d="${p}" fill="none" stroke="#333" stroke-width="2"/>`).join("\n          ")}
+          ${insideItems.join("\n          ")}
+          ${outsideItems.join("\n          ")}
+          <text x="20" y="${mazeH - 10}" font-size="11" fill="#999">Start →</text>
+          <text x="${mazeW - 50}" y="${mazeH - 10}" font-size="11" fill="#999">→ End</text>
+        </svg>
+      </div>
+      <div class="maze-answer-row">
+        <span>Items the boy can take (inside the maze):</span>
+        <span class="maze-answer-box"></span>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// Word Grids — Page 17
+// ============================================================
+function renderWordGridsPage(page: HomeworkPage): string {
+  const d = page.data as any;
+  const words = d.words || ["cat", "car", "can", "cap"];
+  const grid = d.grid || words.map((w: string) => w.split(""));
+
+  return `
+    <div class="word-grids-section">
+      <div class="word-grid-instruction">Fill in the first letter of each word. All words share the same first letter.</div>
+      <table class="word-grid-table">
+        ${grid.map((row: string[], ri: number) => `
+          <tr>
+            <td class="wg-row-num">${ri + 1}</td>
+            ${row.map((ch: string, ci: number) => `
+              <td class="wg-cell ${ci === 0 ? "wg-blank" : ""}">${ci === 0 ? "" : ch}</td>
+            `).join("")}
+            <td class="wg-word-display">${words[ri] || row.join("")}</td>
+          </tr>
+        `).join("")}
+      </table>
+      <div class="word-grid-answer">
+        <span>First letter:</span>
+        <span class="wg-answer-box"></span>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// Shape Decompose — Pages 18-19
+// ============================================================
+function renderShapeDecomposePage(page: HomeworkPage): string {
+  // Generate example shapes with cut lines
+  const shapes = [
+    { name: "Rectangle", svg: `<rect x="10" y="10" width="80" height="50" fill="#e8f4fd" stroke="#333" stroke-width="1.5"/><line x1="50" y1="10" x2="50" y2="60" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="4,3"/>` },
+    { name: "L-Shape", svg: `<polygon points="10,10 50,10 50,30 30,30 30,60 10,60" fill="#fef3cd" stroke="#333" stroke-width="1.5"/><line x1="30" y1="10" x2="30" y2="60" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="4,3"/>` },
+    { name: "T-Shape", svg: `<polygon points="10,10 70,10 70,25 45,25 45,60 35,60 35,25 10,25" fill="#d4edda" stroke="#333" stroke-width="1.5"/><line x1="35" y1="25" x2="45" y2="25" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="4,3"/><line x1="40" y1="10" x2="40" y2="60" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="4,3"/>` },
+  ];
+
+  return `
+    <div class="shape-decompose-section">
+      <div class="sd-example-label">Example — Cut along the red dashed lines:</div>
+      <div class="sd-examples">
+        ${shapes.map((s) => `
+          <div class="sd-example">
+            <svg viewBox="0 0 90 70" class="sd-shape-svg">${s.svg}</svg>
+            <span class="sd-shape-name">${s.name}</span>
+          </div>
+        `).join("")}
+      </div>
+      <div class="sd-task-label">Now cut these shapes into the same pieces by drawing lines:</div>
+      <div class="sd-task-shapes">
+        ${shapes.map((s) => `
+          <div class="sd-task">
+            <svg viewBox="0 0 90 70" class="sd-shape-svg">
+              ${s.svg.replace(/stroke-dasharray="[^"]*"/g, "").replace(/stroke="#e74c3c"/g, "stroke=\"transparent\"")}
+            </svg>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// Dot Grid — Pages 22-23
+// ============================================================
+function renderDotGridPage(page: HomeworkPage): string {
+  const d = page.data as any;
+  const gridSize = d.gridSize || 8;
+  const lines = d.lines || [];
+
+  const dotSpacing = 30;
+  const padding = 15;
+  const svgSize = gridSize * dotSpacing + padding * 2;
+
+  // Generate dots
+  const dots = Array.from({ length: gridSize }, (_, r) =>
+    Array.from({ length: gridSize }, (_, c) => {
+      const x = padding + c * dotSpacing;
+      const y = padding + r * dotSpacing;
+      return `<circle cx="${x}" cy="${y}" r="2.5" fill="#666"/>`;
+    }).join("")
+  ).join("");
+
+  // Generate example lines (connecting some dots)
+  const exampleLines = lines.length > 0
+    ? lines.map((l: any) => {
+        const x1 = padding + l.x1 * dotSpacing;
+        const y1 = padding + l.y1 * dotSpacing;
+        const x2 = padding + l.x2 * dotSpacing;
+        const y2 = padding + l.y2 * dotSpacing;
+        return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#333" stroke-width="2"/>`;
+      }).join("")
+    : // Default pattern: a simple house shape
+      `<line x1="${padding + 3 * dotSpacing}" y1="${padding + 1 * dotSpacing}" x2="${padding + 5 * dotSpacing}" y2="${padding + 3 * dotSpacing}" stroke="#333" stroke-width="2"/>
+       <line x1="${padding + 5 * dotSpacing}" y1="${padding + 3 * dotSpacing}" x2="${padding + 3 * dotSpacing}" y2="${padding + 5 * dotSpacing}" stroke="#333" stroke-width="2"/>
+       <line x1="${padding + 3 * dotSpacing}" y1="${padding + 5 * dotSpacing}" x2="${padding + 1 * dotSpacing}" y2="${padding + 3 * dotSpacing}" stroke="#333" stroke-width="2"/>
+       <line x1="${padding + 1 * dotSpacing}" y1="${padding + 3 * dotSpacing}" x2="${padding + 3 * dotSpacing}" y2="${padding + 1 * dotSpacing}" stroke="#333" stroke-width="2"/>`;
+
+  return `
+    <div class="dot-grid-section">
+      <div class="dot-grid-label">Study this pattern:</div>
+      <svg viewBox="0 0 ${svgSize} ${svgSize}" class="dot-grid-svg">
+        ${dots}
+        ${exampleLines}
+      </svg>
+      <div class="dot-grid-label">Copy it here:</div>
+      <svg viewBox="0 0 ${svgSize} ${svgSize}" class="dot-grid-svg dot-grid-copy">
+        ${dots}
+      </svg>
+    </div>
+  `;
+}
+
+// ============================================================
+// Memory Grid — Page 35
+// ============================================================
+function renderMemoryGridPage(page: HomeworkPage): string {
+  const d = page.data as any;
+  const gridSize = d.gridSize || 4;
+  const items = d.items || [];
+
+  // Default items if none provided
+  const defaultItems = [
+    { row: 0, col: 1, item: "🍎" },
+    { row: 1, col: 3, item: "⭐" },
+    { row: 2, col: 0, item: "🐟" },
+    { row: 3, col: 2, item: "🌸" },
+  ];
+  const gridItems = items.length > 0 ? items : defaultItems;
+
+  const cellSize = 70;
+
+  // Build the study grid (with items)
+  const studyCells = Array.from({ length: gridSize }, (_, r) =>
+    Array.from({ length: gridSize }, (_, c) => {
+      const found = gridItems.find((it: any) => it.row === r && it.col === c);
+      return `<rect x="${c * cellSize}" y="${r * cellSize}" width="${cellSize}" height="${cellSize}" fill="#f8f9fa" stroke="#333" stroke-width="1.5"/>
+              ${found ? `<text x="${c * cellSize + cellSize / 2}" y="${r * cellSize + cellSize / 2 + 8}" text-anchor="middle" font-size="28">${found.item}</text>` : ""}`;
+    }).join("")
+  ).join("");
+
+  // Build the empty recall grid
+  const emptyCells = Array.from({ length: gridSize }, (_, r) =>
+    Array.from({ length: gridSize }, (_, c) =>
+      `<rect x="${c * cellSize}" y="${r * cellSize}" width="${cellSize}" height="${cellSize}" fill="white" stroke="#333" stroke-width="1.5"/>`
+    ).join("")
+  ).join("");
+
+  const gridSvgSize = gridSize * cellSize;
+
+  return `
+    <div class="memory-grid-section">
+      <div class="mg-study-label">Study this grid for ${d.viewTime || 20} seconds:</div>
+      <svg viewBox="0 0 ${gridSvgSize} ${gridSvgSize}" class="mg-grid-svg">
+        ${studyCells}
+      </svg>
+      <div class="mg-recall-label">Now draw the items in their correct positions:</div>
+      <svg viewBox="0 0 ${gridSvgSize} ${gridSvgSize}" class="mg-grid-svg">
+        ${emptyCells}
+      </svg>
+    </div>
+  `;
+}
+
 function renderGenericPage(page: HomeworkPage): string {
   return `
     <div class="generic-content">
@@ -417,24 +677,24 @@ function renderGenericPage(page: HomeworkPage): string {
 // ============================================================
 const RENDERERS: Record<string, (page: HomeworkPage) => string> = {
   association: renderAssociationPage,
-  "equal-division": renderGenericPage,
+  "equal-division": renderEqualDivisionPage,
   "direction-follow": renderDirectionFollowPage,
   "addition-grid": renderAdditionGridPage,
   "shape-code": renderShapeCodePage,
   "number-flow": renderNumberFlowPage,
   "block-counting": renderBlockCountingPage,
-  "curved-maze": renderGenericPage,
+  "curved-maze": renderCurvedMazePage,
   vocabulary: renderVocabularyPage,
   "shape-patterns": renderShapePatternsPage,
-  "word-grids": renderGenericPage,
-  "shape-decompose": renderGenericPage,
+  "word-grids": renderWordGridsPage,
+  "shape-decompose": renderShapeDecomposePage,
   "creature-assembly": renderCreatureAssemblyPage,
-  "dot-grid": renderGenericPage,
+  "dot-grid": renderDotGridPage,
   "logic-association": renderLogicAssociationPage,
   "vegetable-class": renderVegetableClassPage,
   "creative-writing": renderCreativeWritingPage,
   "story-comprehension": renderStoryComprehensionPage,
-  "memory-grid": renderGenericPage,
+  "memory-grid": renderMemoryGridPage,
   "overlap-count": renderOverlapCountPage,
   "sequence-complete": renderSequenceCompletePage,
   "mandala-memory": renderMandalaMemoryPage,
@@ -1024,6 +1284,105 @@ export function buildHomeworkHTML(
       margin-top: 10px;
       font-size: 14px;
     }
+
+    /* Equal Division */
+    .equal-division-section { margin: 15px 0; text-align: center; }
+    .eq-instruction { font-size: 13px; font-weight: 600; margin-bottom: 15px; color: #555; }
+    .eq-box {
+      border: 2px solid #333; border-radius: 8px; padding: 20px;
+      min-height: 180px; position: relative; margin: 0 auto; max-width: 450px;
+    }
+    .eq-items { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .eq-item { font-size: 28px; }
+    .eq-lines-hint {
+      display: flex; justify-content: space-around; margin-top: 15px; padding: 0 20px;
+    }
+    .eq-dashed-line {
+      width: 2px; height: 60px; border-left: 2px dashed #ccc;
+    }
+    .eq-answer-area {
+      margin-top: 20px; font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .eq-answer-box {
+      width: 50px; height: 30px; border: 1.5px solid #333; border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* Curved Maze */
+    .curved-maze-section { margin: 15px 0; text-align: center; }
+    .maze-svg-container { margin: 0 auto; max-width: 450px; }
+    .maze-svg { width: 100%; height: auto; }
+    .maze-answer-row {
+      margin-top: 15px; font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .maze-answer-box {
+      width: 40px; height: 28px; border: 1.5px solid #333; border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* Word Grids */
+    .word-grids-section { margin: 15px 0; }
+    .word-grid-instruction { font-size: 13px; font-weight: 600; margin-bottom: 15px; color: #555; }
+    .word-grid-table {
+      border-collapse: collapse; margin: 0 auto;
+    }
+    .word-grid-table td {
+      border: 1.5px solid #333; padding: 8px 12px; text-align: center;
+      font-size: 16px; font-weight: 700;
+    }
+    .wg-row-num { background: #f0f0f0; width: 30px; font-size: 13px; }
+    .wg-cell { width: 35px; }
+    .wg-blank { background: #fff9c4; }
+    .wg-word-display { font-size: 12px; color: #999; font-weight: 400; padding-left: 15px; }
+    .word-grid-answer {
+      margin-top: 15px; font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .wg-answer-box {
+      width: 35px; height: 30px; border: 1.5px solid #333; border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* Shape Decompose */
+    .shape-decompose-section { margin: 15px 0; }
+    .sd-example-label, .sd-task-label {
+      font-size: 12px; font-weight: 600; color: #555; margin-bottom: 10px;
+    }
+    .sd-examples, .sd-task-shapes {
+      display: flex; justify-content: center; gap: 30px; margin-bottom: 20px;
+    }
+    .sd-example, .sd-task { text-align: center; }
+    .sd-shape-svg { width: 100px; height: 80px; }
+    .sd-shape-name { font-size: 11px; color: #777; display: block; margin-top: 4px; }
+
+    /* Dot Grid */
+    .dot-grid-section {
+      margin: 15px 0; display: flex; justify-content: center;
+      gap: 30px; align-items: flex-start;
+    }
+    .dot-grid-label {
+      font-size: 12px; font-weight: 600; color: #555; text-align: center;
+      margin-bottom: 8px; width: 100%;
+    }
+    .dot-grid-svg {
+      width: 220px; height: 220px; border: 1.5px solid #ddd; border-radius: 4px;
+      background: white;
+    }
+    .dot-grid-copy { border-style: dashed; }
+
+    /* Memory Grid */
+    .memory-grid-section { margin: 15px 0; text-align: center; }
+    .mg-study-label, .mg-recall-label {
+      font-size: 13px; font-weight: 600; color: #555; margin-bottom: 10px;
+    }
+    .mg-grid-svg {
+      width: 280px; height: 280px; margin: 0 auto 20px; display: block;
+    }
+
+    /* Font smoothing */
+    body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
   </style>
 </head>
 <body>

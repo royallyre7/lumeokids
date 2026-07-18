@@ -60,6 +60,7 @@ export async function generateHomeworkPDF(
   const pdf = await page.pdf({
     format: "A4",
     printBackground: true,
+    preferCSSPageSize: true,
     margin: { top: "15mm", right: "15mm", bottom: "15mm", left: "15mm" },
   });
 

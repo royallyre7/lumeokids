@@ -3,14 +3,77 @@
 // ============================================================
 // Generates images for homework exercises using multiple AI providers.
 // Falls back to emoji placeholders when providers are unavailable.
+//
+// Resilience: fetch timeouts (10s), circuit breaker (skip after 3 failures for 60s).
 
 import {
-  getAvailableProvider,
   recordUsage,
+  NINE_ROUTER_URL,
+  PROVIDERS,
   type UserTier,
-  type AiProvider,
   type GenerateImageResponse,
 } from "./aiQuota";
+
+// ============================================================
+// Fetch with timeout
+// ============================================================
+const FETCH_TIMEOUT_MS = 10_000; // 10 seconds per provider call
+
+async function fetchWithTimeout(
+  url: string,
+  init: RequestInit,
+  timeoutMs = FETCH_TIMEOUT_MS
+): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// ============================================================
+// Circuit Breaker
+// ============================================================
+// Tracks consecutive failures per provider. After BREAKER_THRESHOLD
+// failures, the provider is skipped for BREAKER_COOLDOWN_MS.
+
+const BREAKER_THRESHOLD = 3;
+const BREAKER_COOLDOWN_MS = 60_000; // 60 seconds
+
+interface BreakerState {
+  failures: number;
+  openedAt: number; // timestamp when breaker opened
+}
+
+const breakers = new Map<string, BreakerState>();
+
+function circuitIsOpen(providerName: string): boolean {
+  const state = breakers.get(providerName);
+  if (!state) return false;
+  if (state.failures < BREAKER_THRESHOLD) return false;
+  // Check if cooldown has elapsed
+  if (Date.now() - state.openedAt > BREAKER_COOLDOWN_MS) {
+    // Half-open: allow one retry
+    breakers.delete(providerName);
+    return false;
+  }
+  return true;
+}
+
+function recordSuccess(providerName: string): void {
+  breakers.delete(providerName);
+}
+
+function recordFailure(providerName: string): void {
+  const state = breakers.get(providerName) || { failures: 0, openedAt: 0 };
+  state.failures += 1;
+  if (state.failures >= BREAKER_THRESHOLD && state.openedAt === 0) {
+    state.openedAt = Date.now();
+  }
+  breakers.set(providerName, state);
+}
 
 // ============================================================
 // Types
@@ -72,7 +135,7 @@ async function generateWithGoogle(
   try {
     const fullPrompt = `${prompt}, ${STYLE_PROMPTS[style]}`;
 
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0.0-generate-002:predict?key=${apiKey}`,
       {
         method: "POST",
@@ -121,7 +184,7 @@ async function generateWithOpenAI(
     const fullPrompt = `${prompt}, ${STYLE_PROMPTS[style]}`;
     const dalleSize = size === "large" ? "1024x1024" : size === "medium" ? "512x512" : "256x256";
 
-    const response = await fetch("https://api.openai.com/v1/images/generations", {
+    const response = await fetchWithTimeout("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -148,6 +211,50 @@ async function generateWithOpenAI(
     return { success: true, imageUrl, provider: "openai" };
   } catch (error) {
     return { success: false, error: `OpenAI generation failed: ${error}` };
+  }
+}
+
+/**
+ * Generate image using 9Router (OpenAI-compatible proxy).
+ * Routes to Fireworks, SDXL, GLM, or other models via local proxy.
+ */
+async function generateWith9Router(
+  prompt: string,
+  style: ImageStyle,
+  size: ImageSize,
+  _apiKey: string
+): Promise<GenerateImageResponse> {
+  try {
+    const fullPrompt = `${prompt}, ${STYLE_PROMPTS[style]}`;
+    const dalleSize = size === "large" ? "1024x1024" : size === "medium" ? "512x512" : "256x256";
+
+    const response = await fetchWithTimeout(`${NINE_ROUTER_URL}/images/generations`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer local",
+      },
+      body: JSON.stringify({
+        model: process.env.NINE_ROUTER_MODEL || "fireworks/sdxl",
+        prompt: fullPrompt,
+        n: 1,
+        size: dalleSize,
+        response_format: "b64_json",
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      return { success: false, error: `9Router API error: ${err}` };
+    }
+
+    const data = await response.json();
+    const b64 = data.data[0].b64_json;
+    const imageUrl = `data:image/png;base64,${b64}`;
+
+    return { success: true, imageUrl, provider: "nine-router" };
+  } catch (error) {
+    return { success: false, error: `9Router generation failed: ${error}` };
   }
 }
 
@@ -210,43 +317,49 @@ export async function generateImage(
     };
   }
 
-  // Find available provider
-  const provider = getAvailableProvider(userTier);
+  // Try providers in priority order: 9Router → Google → OpenAI → placeholder
+  const sorted = [...PROVIDERS]
+    .filter((p) => p.supportsImages && p.name !== "local")
+    .sort((a, b) => a.priority - b.priority);
 
-  if (!provider || provider.name === "local") {
-    // No AI provider available — use placeholder
-    const result = generatePlaceholder(prompt, style, size);
-    imageCache[cacheKey] = result.imageUrl!;
-    return result;
+  for (const provider of sorted) {
+    if (!provider.enabled) continue;
+
+    // Circuit breaker: skip provider if too many recent failures
+    if (circuitIsOpen(provider.name)) continue;
+
+    let result: GenerateImageResponse;
+
+    switch (provider.name) {
+      case "nine-router":
+        result = await generateWith9Router(prompt, style, size, provider.apiKey!);
+        break;
+      case "google":
+        if (!provider.apiKey) continue;
+        result = await generateWithGoogle(prompt, style, size, provider.apiKey);
+        break;
+      case "openai":
+        if (!provider.apiKey) continue;
+        result = await generateWithOpenAI(prompt, style, size, provider.apiKey);
+        break;
+      default:
+        continue;
+    }
+
+    if (result.success && result.imageUrl) {
+      recordSuccess(provider.name);
+      imageCache[cacheKey] = result.imageUrl;
+      recordUsage(provider.name);
+      return result;
+    }
+    // Provider failed — record failure and try next one
+    recordFailure(provider.name);
   }
 
-  // Generate with the best available provider
-  let result: GenerateImageResponse;
-
-  switch (provider.name) {
-    case "google":
-      result = await generateWithGoogle(prompt, style, size, provider.apiKey!);
-      break;
-    case "openai":
-      result = await generateWithOpenAI(prompt, style, size, provider.apiKey!);
-      break;
-    default:
-      result = generatePlaceholder(prompt, style, size);
-  }
-
-  if (result.success && result.imageUrl) {
-    // Cache the result
-    imageCache[cacheKey] = result.imageUrl;
-    // Record usage
-    recordUsage(provider.name);
-  } else {
-    // Generation failed — fall back to placeholder
-    const fallback = generatePlaceholder(prompt, style, size);
-    imageCache[cacheKey] = fallback.imageUrl!;
-    return { ...fallback, error: result.error };
-  }
-
-  return result;
+  // All providers failed — use placeholder
+  const fallback = generatePlaceholder(prompt, style, size);
+  imageCache[cacheKey] = fallback.imageUrl!;
+  return fallback;
 }
 
 /**
